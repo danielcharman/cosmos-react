@@ -1,7 +1,9 @@
 const asyncHandler = require('express-async-handler')
+const mongoose = require('mongoose');
 
 const User = require('../models/userModel')
 const Planet = require('../models/planetModel')
+const PlanetBuilding = require('../models/planetBuildingModel')
 
 // @desc    Get planets
 // @route   GET /api/planets
@@ -63,7 +65,7 @@ const createPlanet = asyncHandler(async (req, res) => {
         temperature,
         size,
         user: req.user.id,
-        status: 'new',
+        // status: 'new',
     })
 
     res.status(201).json(planet)
@@ -73,46 +75,62 @@ const createPlanet = asyncHandler(async (req, res) => {
 // @route   PUT /api/planets/:id
 // @access  Private
 const updatePlanet = asyncHandler(async (req, res) => {
-  const planet = await Planet.findById(req.params.id)
+	const planet = await Planet.findById(req.params.id)
 
-  if (!planet) {
-    res.status(404)
-    throw new Error('Planet not found')
-  }
+	if (!planet) {
+		res.status(404)
+		throw new Error('Planet not found')
+	}
 
-  if (planet.user.toString() !== req.user.id) {
-    res.status(401)
-    throw new Error('Not Authorized')
-  }
+	if (planet.user.toString() !== req.user.id) {
+		res.status(401)
+		throw new Error('Not Authorized')
+	}
 
-  const updatedPlanet = await Planet.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true }
-  )
+	const updatedPlanet = await Planet.findByIdAndUpdate(
+		req.params.id,
+		req.body,
+		{ new: true }
+	)
 
-  res.status(200).json(updatedPlanet)
+	res.status(200).json(updatedPlanet)
 })
 
 // @desc    Delete planet
 // @route   DELETE /api/planets/:id
 // @access  Private
 const deletePlanet = asyncHandler(async (req, res) => {
-  const planet = await Planet.findById(req.params.id)
+	const planet = await Planet.findById(req.params.id)
 
-  if (!planet) {
-    res.status(404)
-    throw new Error('Planet not found')
-  }
+	if (!planet) {
+		res.status(404)
+		throw new Error('Planet not found')
+	}
 
-  if (planet.user.toString() !== req.user.id) {
-    res.status(401)
-    throw new Error('Not Authorized')
-  }
+	if (planet.user.toString() !== req.user.id) {
+		res.status(401)
+		throw new Error('Not Authorized')
+	}
 
-  await planet.remove()
+	await planet.remove()
 
-  res.status(200).json({ success: true })
+	res.status(200).json({ success: true })
+})
+
+// @desc    Get user planet
+// @route   GET /api/planets/:id/buildings
+// @access  Public
+const getPlanetBuildings = asyncHandler(async (req, res) => {
+	const planetBuildings = await PlanetBuilding.find({
+		planet: new mongoose.mongo.ObjectId(req.params.id)
+	})
+
+	if (!planetBuildings) {
+		res.status(404)
+		throw new Error('Planet buildings not found')
+	}
+
+	res.status(200).json(planetBuildings)
 })
 
 module.exports = {
@@ -120,5 +138,6 @@ module.exports = {
     getPlanet,
     createPlanet,
     updatePlanet,
-    deletePlanet
+    deletePlanet,
+    getPlanetBuildings
 }

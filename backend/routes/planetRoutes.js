@@ -5,7 +5,8 @@ const {
     getPlanet, 
     createPlanet, 
     updatePlanet, 
-    deletePlanet
+    deletePlanet,
+    getPlanetBuildings
 } = require('../controllers/planetController')
 
 const {protect} = require('../middleware/authMiddleware')
@@ -18,5 +19,8 @@ router.route('/:id')
     .get(protect, getPlanet)
     .delete(protect, deletePlanet)
     .put(protect, updatePlanet)
+
+router.route('/:id/buildings')
+    .get(protect, getPlanetBuildings)
 
 module.exports = router
