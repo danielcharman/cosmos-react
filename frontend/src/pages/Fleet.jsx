@@ -1,12 +1,12 @@
-function Overview() {
+function Fleet() {
 
     return (
         <>
             <section className='sectionHeading'>
-                <h1 className='sectionHeadingText'>Overview</h1>
+                <h1 className='sectionHeadingText'>Fleet</h1>
             </section>
         </>
     )
 }
 
-export default Overview
+export default Fleet

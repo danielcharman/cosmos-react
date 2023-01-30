@@ -7,6 +7,9 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Header from './components/Header'
 import Overview from './pages/Overview'
+import Structures from './pages/Structures'
+import Research from './pages/Research'
+import Fleet from './pages/Fleet'
 
 function App() {
 	return (
@@ -24,6 +27,30 @@ function App() {
 								element={
 									<PrivateRoute>
 										<Overview />
+									</PrivateRoute>
+								}
+							/>
+							<Route
+								path='/structures'
+								element={
+									<PrivateRoute>
+										<Structures />
+									</PrivateRoute>
+								}
+							/>
+							<Route
+								path='/research'
+								element={
+									<PrivateRoute>
+										<Research />
+									</PrivateRoute>
+								}
+							/>
+							<Route
+								path='/fleet'
+								element={
+									<PrivateRoute>
+										<Fleet />
 									</PrivateRoute>
 								}
 							/>

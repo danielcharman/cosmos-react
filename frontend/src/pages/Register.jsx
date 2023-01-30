@@ -1,7 +1,6 @@
 import {useState, useEffect} from 'react'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, Link} from 'react-router-dom'
 import {toast} from 'react-toastify'
-import {FaUser} from 'react-icons/fa'
 import {useSelector, useDispatch} from 'react-redux'
 import {register, reset} from '../features/auth/authSlice'
 import Spinner from '../components/Spinner'
@@ -62,28 +61,24 @@ function Register() {
 
     return (
         <>
-            <section className='heading'>
-                <h1>
-                    <FaUser /> Register {user}
-                </h1>
-                <p>Please create an account</p>
-            </section>
+            <h1 className='registerHeading'>Register</h1>
             <section className='form'>
                 <form onSubmit={onSubmit}>
-                    <div className='form-group'>
-                        <input type='text' className='form-control' id='name' name='name' value={name} placeholder='Your Name' onChange={onChange} required />
+                    <div className='formGroup'>
+                        <input type='text' className='formControl' id='name' name='name' value={name} placeholder='Your Name' onChange={onChange} required />
                     </div>
-                    <div className='form-group'>
-                        <input type='email' className='form-control' id='email' name='email' value={email} placeholder='Your Email' onChange={onChange} required />
+                    <div className='formGroup'>
+                        <input type='email' className='formControl' id='email' name='email' value={email} placeholder='Your Email' onChange={onChange} required />
                     </div>
-                    <div className='form-group'>
-                        <input type='password' className='form-control' id='password' name='password' value={password} placeholder='Your Password' onChange={onChange} required />
+                    <div className='formGroup'>
+                        <input type='password' className='formControl' id='password' name='password' value={password} placeholder='Your Password' onChange={onChange} required />
                     </div>
-                    <div className='form-group'>
-                        <input type='password' className='form-control' id='password2' name='password2' value={password2} placeholder='Confirm Password' onChange={onChange} required />
+                    <div className='formGroup'>
+                        <input type='password' className='formControl' id='password2' name='password2' value={password2} placeholder='Confirm Password' onChange={onChange} required />
                     </div>
-                    <div className='form-group'>
-                        <button className='btn btn-block'>Submit</button>
+                    <div className='formGroup'>
+                        <button className='btn btn-block'>Register</button>
+                        <p style={{marginTop: '30px'}}><Link to='/'>Back Home</Link></p>
                     </div>
                 </form>
             </section>

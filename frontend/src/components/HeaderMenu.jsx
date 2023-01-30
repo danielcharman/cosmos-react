@@ -59,19 +59,7 @@ function HeaderMenu() {
                     <span className='headerMenuItemLabel'>Fleet</span>
                     <span className='headerMenuItemQueue'>0 / 0</span>
                 </Link>
-            </li>  
-            <li className={'headerMenuItem ' + ((isCurrentRoute('/login')) && 'active')}>
-                <Link to='/login' onClick={onToggle}>
-                    <FaSignInAlt className='headerMenuItemIcon' />  
-                    <span className='headerMenuItemLabel'>Login</span>
-                </Link>
-            </li>  
-            <li className={'headerMenuItem ' + ((isCurrentRoute('/register')) && 'active')}>
-                <Link to='/register' onClick={onToggle}>
-                    <FaUserPlus className='headerMenuItemIcon' />  
-                    <span className='headerMenuItemLabel'>Register</span>
-                </Link>
-            </li>  
+            </li>   
             <li className='headerMenuItem' onClick={onLogout}>
                 <FaSignOutAlt className='headerMenuItemIcon' />  
                 <span className='headerMenuItemLabel'>Logout</span>

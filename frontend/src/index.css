@@ -292,6 +292,12 @@ h3 {
 	text-shadow: 0px 6px rgb(0 0 0 / 80%);
 }
 
+.registerHeading {
+	font-size: 40px;
+	font-weight: 700;
+	text-shadow: 0px 6px rgb(0 0 0 / 80%);
+}
+
 .btn {
 	padding: 15px 30px;
 	background-color: var(--light-blue);

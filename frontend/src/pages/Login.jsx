@@ -1,11 +1,9 @@
 import {useState, useEffect} from 'react'
 import {toast} from 'react-toastify'
-import {FaSignInAlt} from 'react-icons/fa'
 import {useSelector, useDispatch} from 'react-redux'
 import {useNavigate, Link} from 'react-router-dom'
 import {login, reset} from '../features/auth/authSlice'
 import Spinner from '../components/Spinner'
-import planetImage from '../assets/img/planet.png'
 
 function Login() {
     const [formData, setFormData] = useState({
@@ -67,7 +65,7 @@ function Login() {
                     </div>
                     <div className='formGroup'>
                         <button className='btn'>Login</button> 
-                        <p><Link to='/'>Back Home</Link></p>
+                        <p style={{marginTop: '30px'}}><Link to='/'>Back Home</Link></p>
                     </div>
                 </form>
             </section>

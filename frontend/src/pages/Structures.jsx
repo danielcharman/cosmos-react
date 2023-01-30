@@ -1,12 +1,12 @@
-function Overview() {
+function Structures() {
 
     return (
         <>
             <section className='sectionHeading'>
-                <h1 className='sectionHeadingText'>Overview</h1>
+                <h1 className='sectionHeadingText'>Structures</h1>
             </section>
         </>
     )
 }
 
-export default Overview
+export default Structures
