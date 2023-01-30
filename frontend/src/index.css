@@ -1,0 +1,322 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root {
+	--light-blue: #007bff;
+	--light-green: #28a745;
+	--light-red: #dc3545;
+	--coal: #343a40;
+}
+
+#root {
+	height: 100%;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+
+	-webkit-user-select: none; /* Safari */
+	-ms-user-select: none; /* IE 10 and IE 11 */
+	user-select: none; /* Standard syntax */
+}
+
+body {
+	font-family: 'Poppins', sans-serif;
+	height: 100vh;
+	background-color: #111111;
+	padding-top: 55px;
+	color: white;
+	background: url(./assets/img/bg.jpg) no-repeat top center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+a {
+	text-decoration: none;
+	color: white;
+}
+
+p {
+  	line-height: 1.7;
+}
+
+ul {
+  	list-style: none;
+}
+
+li {
+  	line-height: 2.2;
+}
+
+h1,
+h2,
+h3 {
+	font-weight: 600;
+	margin-bottom: 10px;
+}
+
+.container {
+	width: 100%;
+	max-width: 960px;
+	margin: 0 auto;
+	padding: 0 20px;
+	text-align: center;
+}
+
+.header {
+	background-color: var(--coal);
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	padding: 10px;
+	-webkit-box-shadow: 0 10px 10px rgb(0 0 0 / 30%);
+	-moz-box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 10px 10px rgb(0 0 0 / 30%);
+	text-align: center;
+}
+
+.headerMenu {
+	position: absolute;
+	top: 0;
+	left: 0;
+	text-align: left;
+	cursor: pointer;
+}
+
+.headerMenuIcon {
+	color: white;
+	font-size: 25px;
+	display: inline-block;
+	margin-left: 15px;
+	margin-top: 15px;
+}
+
+.headerMenuItems {
+	display: none;
+	position: fixed;
+	z-index: 90;
+	top: 55px;
+	left: 0;
+	bottom: 0;
+	width: 300px;
+	background-color: white;
+}
+
+.headerMenuItems.open {
+	display: block;
+}
+
+.headerMenuItem {
+	padding: 10px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	color: black;
+}
+
+.headerMenuItem a {
+	color: inherit;
+}
+
+.headerMenuItem:hover {
+	background-color: #eee;
+	/* color: white; */
+}
+
+.headerMenuItem.active {
+	background-color: var(--light-blue);
+	color: white;
+}
+
+.headerMenuItem.active .headerMenuItemIcon {
+	color: white;
+}
+
+.headerMenuItemIcon {
+	color: #999999;
+	font-size: 17px;
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
+.headerMenuItemLabel {
+	font-weight: 600;
+	font-size: 16px;
+}
+
+.headerMenuItemQueue {
+	font-size: 10px;
+	background-color: var(--light-green);
+	color: white;
+	padding: 2px 5px;
+	border-radius: 3px;
+	margin-left: 5px;
+}
+
+.headerResources {
+	display: inline-block;
+}
+
+.headerResourcesItem {
+	display: inline-block;
+	color: white;
+	margin: 0 10px;
+}
+
+.headerResourcesItemLabel {
+	font-weight: 600;
+	font-size: 14px;
+}
+
+.headerResourcesItemValue {
+	font-size: 12px;
+	background-color: var(--light-green);
+	padding: 2px 10px;
+	border-radius: 10px;
+	margin-left: 5px;
+}
+
+.headerResourcesItemValue.low {
+	background-color: var(--light-red);
+}
+
+.headerPlanets {
+	position: absolute;
+	top: 7px;
+	right: 15px;
+	text-align: left;
+	cursor: pointer;
+}
+
+.headerPlanetsCurrent {
+	position: relative;
+	display: block;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	width: 300px;
+	line-height: 1;
+}
+
+.headerPlanetsSelector {
+	color: white;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	font-size: 30px;
+}
+
+.headerPlanetsOptions {
+	display: none;
+	position: absolute;
+	top: 42px;
+	right: 0;
+	width: 300px;
+	background-color: var(--coal);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-top: none;
+}
+
+.headerPlanetsOptions.open {
+	display: block;
+}
+
+.headerPlanetsOptionsItem {
+	border-top: 1px solid rgba(255, 255, 255, 0.1);
+	line-height: 1;
+	vertical-align: middle;
+}
+
+.headerPlanetsOptionsItem.active {
+	background-color: var(--light-blue);
+	color: white;
+}
+
+.headerPlanetsOptionsItem:hover {
+	background-color: #999;
+	color: white;
+}
+
+.headerPlanetsPlanet {
+	display: block;
+	padding: 10px;
+}
+
+.headerPlanetsIcon {
+	color: white;
+	font-size: 17px;
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
+.headerPlanetsPlanetName {
+	display: inline-block;
+	font-weight: 600;
+	font-size: 14px;
+	color: white;
+	vertical-align: middle;
+}
+
+.headerPlanetsPlanetCoords {
+	display: inline-block;
+	font-size: 12px;
+	font-weight: 300;
+	color: #cccccc;
+	vertical-align: middle;
+	margin-left: 5px;
+}
+
+.bodyWrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+}
+
+.homeImage {
+	width: 250px;
+	height: 250px;
+}
+
+.homeHeading {
+	font-size: 60px;
+	font-weight: 700;
+	text-shadow: 0px 6px rgb(0 0 0 / 80%);
+	margin-top: -50px;
+}
+
+.loginHeading {
+	font-size: 40px;
+	font-weight: 700;
+	text-shadow: 0px 6px rgb(0 0 0 / 80%);
+}
+
+.btn {
+	padding: 15px 30px;
+	background-color: var(--light-blue);
+	color: white;
+	border-radius: 5px;
+	font-weight: 600;
+    font-size: inherit;
+}
+
+.form {
+	width: 300px;
+	margin: auto;
+}
+
+.formGroup {
+	margin: 0 0 10px;
+}
+
+.formControl {
+	background-color: #343a40;
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+	padding: 15px;
+    font-size: inherit;
+    font-family: inherit;
+    border-radius: 4px;    
+	width: 100%;
+}
