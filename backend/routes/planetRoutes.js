@@ -1,7 +1,7 @@
 const express = require('express')
-const router = express.Router()
+const router = express.Router({mergeParams: true})
 const {
-    getPlanets, 
+    getAllPlanets, 
     getPlanet, 
     createPlanet, 
     updatePlanet, 
@@ -11,16 +11,15 @@ const {
 
 const {protect} = require('../middleware/authMiddleware')
 
+//reroute into note router
+const buildingRouter = require('./buildingRoutes')
+router.use('/:planetId/buildings', buildingRouter)
+
 router.route('/')
-    .get(protect, getPlanets)
-    .post(protect, createPlanet)
+    .get(protect, getAllPlanets)
 
 router.route('/:id')
     .get(protect, getPlanet)
-    .delete(protect, deletePlanet)
-    .put(protect, updatePlanet)
 
-router.route('/:id/buildings')
-    .get(protect, getPlanetBuildings)
 
 module.exports = router

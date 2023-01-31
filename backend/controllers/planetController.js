@@ -8,7 +8,16 @@ const PlanetBuilding = require('../models/planetBuildingModel')
 // @desc    Get planets
 // @route   GET /api/planets
 // @access  Private
-const getPlanets = asyncHandler(async (req, res) => {
+const getAllPlanets = asyncHandler(async (req, res) => {
+    const planets = await Planet.find().exec()
+
+    res.status(200).json(planets)
+})
+
+// @desc    Get users planets
+// @route   GET /api/users/:id/planets
+// @access  Private
+const getUserPlanets = asyncHandler(async (req, res) => {
     const planets = await Planet.find({ user: req.user.id })
 
     res.status(200).json(planets)
@@ -25,10 +34,10 @@ const getPlanet = asyncHandler(async (req, res) => {
         throw new Error('Planet not found')
     }
 
-    if (planet.user.toString() !== req.user.id) {
-        res.status(401)
-        throw new Error('Not Authorized')
-    }
+    // if (planet.user.toString() !== req.user.id) {
+    //     res.status(401)
+    //     throw new Error('Not Authorized')
+    // }
 
     res.status(200).json(planet)
 })
@@ -134,7 +143,8 @@ const getPlanetBuildings = asyncHandler(async (req, res) => {
 })
 
 module.exports = {
-    getPlanets,
+    getAllPlanets,
+	getUserPlanets,
     getPlanet,
     createPlanet,
     updatePlanet,

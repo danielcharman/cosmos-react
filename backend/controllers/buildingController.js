@@ -2,19 +2,43 @@ const asyncHandler = require('express-async-handler')
 
 const User = require('../models/userModel')
 const Building = require('../models/buildingModel')
+const PlanetBuilding = require('../models/planetBuildingModel')
 
 // @desc    Get buildings
 // @route   GET /api/buildings
 // @access  Private
-const getBuildings = asyncHandler(async (req, res) => {
-    // const buildings = await Building.find({ user: req.user.id })
+const getAllBuildings = asyncHandler(async (req, res) => {
     const buildings = await Building.find()
 
     res.status(200).json(buildings)
 })
 
-// @desc    Get user building
-// @route   GET /api/buildings/:id
+// @desc    Get planet buildings
+// @route   GET /api/planets/:id/buildings
+// @access  Private
+const getPlanetBuildings = asyncHandler(async (req, res) => {
+    const planetBuildings = await PlanetBuilding.find({planet: req.params.planetId})
+
+	const buildings = await Promise.all(planetBuildings.map(async (planetBuilding) => {
+		const building = await Building.findById(planetBuilding.building)
+		return {planetBuilding, building}
+	}));
+
+    if (!buildings) {
+        res.status(404)
+        throw new Error('Planet buildings not found ' + req.params.planetId)
+    }
+
+    // if (planet.user.toString() !== req.user.id) {
+    //     res.status(401)
+    //     throw new Error('Not Authorized')
+    // }
+
+    res.status(200).json(buildings)
+})
+
+// @desc    Get planet building
+// @route   GET /api/planets/:id
 // @access  Private
 const getBuilding = asyncHandler(async (req, res) => {
     const building = await Building.findById(req.params.id)
@@ -111,7 +135,8 @@ const deleteBuilding = asyncHandler(async (req, res) => {
 })
 
 module.exports = {
-    getBuildings,
+    getAllBuildings,
+    getPlanetBuildings,
     getBuilding,
     createBuilding,
     updateBuilding,

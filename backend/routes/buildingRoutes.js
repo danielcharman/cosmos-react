@@ -1,22 +1,14 @@
 const express = require('express')
-const router = express.Router()
+const router = express.Router({mergeParams: true})
+
 const {
-    getBuildings, 
-    getBuilding, 
-    createBuilding, 
-    updateBuilding, 
-    deleteBuilding
+    getAllBuildings, 
+    getPlanetBuildings,
 } = require('../controllers/buildingController')
 
 const {protect} = require('../middleware/authMiddleware')
 
 router.route('/')
-    .get(protect, getBuildings)
-    .post(protect, createBuilding)
-
-router.route('/:id')
-    .get(protect, getBuilding)
-    .delete(protect, deleteBuilding)
-    .put(protect, updateBuilding)
+    .get(protect, getPlanetBuildings)
 
 module.exports = router
