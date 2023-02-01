@@ -9,7 +9,7 @@ function PlanetResources() {
 		isLoading, 
 	} = useSelector(state => state.planets)
 
-	if(isLoading) return <></>
+	// if(isLoading) return <></>
 
     return (
 		<ul className='headerResources'>

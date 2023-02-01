@@ -56,8 +56,54 @@ function Structures() {
         closeModal()
     }
 
-    if (isLoading) {
-        return 'Loading'
+    const isDisabled = (building) => {
+        if(building.planetBuilding.level === 0) return true
+        if(!building.planetBuilding.active) return true
+        return false
+    }
+
+    const canAfford = (cost, resource) => {
+        return (cost < resource) ? true : false
+    }
+
+    const canAffordAll = () => {
+        if(!canAfford(oreCost, currentPlanet.ore)) return false
+        if(!canAfford(crystalCost, currentPlanet.crystal)) return false
+        if(!canAfford(gasCost, currentPlanet.gas)) return false
+        console.log('true')
+        return true
+    }
+
+    // if (isLoading) {
+    //     return 'Loading'
+    // }
+
+    let duration, oreCost, crystalCost, gasCost
+
+    if(currentBuilding) {
+        duration = getMultipliedValue(
+            currentBuilding.building.duration,
+            currentBuilding.building.durationMultipler,
+            (currentBuilding.planetBuilding.level + 1)
+        )
+
+        oreCost = getMultipliedValue(
+            currentBuilding.building.ore,
+            currentBuilding.building.oreMultipler,
+            (currentBuilding.planetBuilding.level + 1)
+        )
+
+        crystalCost = getMultipliedValue(
+            currentBuilding.building.crystal,
+            currentBuilding.building.crystalMultipler,
+            (currentBuilding.planetBuilding.level + 1)
+        )
+
+        gasCost = getMultipliedValue(
+            currentBuilding.building.gas,
+            currentBuilding.building.crystalMultipler,
+            (currentBuilding.planetBuilding.level + 1)
+        )
     }
 
     return (
@@ -66,23 +112,20 @@ function Structures() {
 
             <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>
                 {buildings.map((building, index) => {
-                    const level = building.planetBuilding ? building.planetBuilding.level : 0
-
                     return (
                         <div key={index} style={{width: '16.6666%'}}>
-                            <div className={'buildingTile ' + (level === 0 && 'disabled')} title={building.building.name} onClick={() => {
-                                if(level === 0) return
+                            <div className={'buildingTile ' + (isDisabled(building) && 'disabled')} title={building.building.name} onClick={() => {
+                                if(isDisabled(building)) return
                                 setCurrentBuilding(building)
                                 openModal()
                             }}>
                                 <img src={`/assets/img/structure/${building.building.name.replace(/ /g,"_")}.jpg`} alt={building.building.name} className='img' />
                                 <span className='badge badge-success'>
-                                    {level}
+                                    {building.planetBuilding.level}
                                 </span>
                             </div>
                         </div>
                     )
-
                 })}
             </div>
 
@@ -105,7 +148,7 @@ function Structures() {
                             <table className='table' style={{marginTop: 30}}>
                                 <tbody>
                                     <tr>
-                                        <th>Next Level</th>
+                                        <th>Level</th>
                                         <td>{currentBuilding.planetBuilding.level} > <b>{currentBuilding.planetBuilding.level + 1}</b></td>
                                     </tr>
                                     <tr>
@@ -113,11 +156,7 @@ function Structures() {
                                             Duration 
                                         </th>
                                         <td style={{width: '65%'}}>
-                                            {getMultipliedValue(
-                                                currentBuilding.building.duration,
-                                                currentBuilding.building.durationMultipler,
-                                                (currentBuilding.planetBuilding.level + 1)
-                                            ) / 60} minutes
+                                            {duration / 60} minutes
                                         </td>
                                     </tr>
                                     <tr>
@@ -125,32 +164,20 @@ function Structures() {
                                         <td>
                                             <div>
                                                 Ore 
-                                                <span className={'badge badge-success'} style={{marginLeft: 5}}>
-                                                    {getMultipliedValue(
-                                                        currentBuilding.building.ore,
-                                                        currentBuilding.building.oreMultipler,
-                                                        (currentBuilding.planetBuilding.level + 1)
-                                                    )}
+                                                <span className={'badge ' + ((canAfford(oreCost, currentPlanet.ore)) ? 'badge-success' : 'badge-danger')} style={{marginLeft: 5}}>
+                                                    {oreCost}
                                                 </span>
                                             </div>
                                             <div>
                                                 Crystal 
-                                                <span className={'badge badge-success'} style={{marginLeft: 5}}>
-                                                    {getMultipliedValue(
-                                                        currentBuilding.building.crystal,
-                                                        currentBuilding.building.crystalMultipler,
-                                                        (currentBuilding.planetBuilding.level + 1)
-                                                    )}
+                                                <span className={'badge ' + ((canAfford(crystalCost, currentPlanet.crystal)) ? 'badge-success' : 'badge-danger')} style={{marginLeft: 5}}>
+                                                    {crystalCost}
                                                 </span>
                                             </div>
                                             <div>
                                                 Gas 
-                                                <span className={'badge badge-success'} style={{marginLeft: 5}}>
-                                                    {getMultipliedValue(
-                                                        currentBuilding.building.gas,
-                                                        currentBuilding.building.crystalMultipler,
-                                                        (currentBuilding.planetBuilding.level + 1)
-                                                    )}
+                                                <span className={'badge ' + ((canAfford(gasCost, currentPlanet.gas)) ? 'badge-success' : 'badge-danger')} style={{marginLeft: 5}}>
+                                                    {gasCost}
                                                 </span>
                                             </div>
                                         </td>
@@ -158,7 +185,10 @@ function Structures() {
                                 </tbody>
                             </table>
 
-                            <button className="btn btn-success" onClick={() => onUpgrade(currentBuilding.planetBuilding._id, currentBuilding.planetBuilding.level + 1)}>
+                            <button className={'btn ' + ((canAffordAll()) ? 'btn-success' : 'btn-danger') + ((!canAffordAll() || isDisabled(currentBuilding)) ? ' disabled' : '')} onClick={() => {
+                                if(isDisabled(currentBuilding)) return
+                                onUpgrade(currentBuilding.planetBuilding._id, currentBuilding.planetBuilding.level + 1)
+                            }}>
                                 Upgrade to level {currentBuilding.planetBuilding.level + 1}
                             </button>
                         </div>

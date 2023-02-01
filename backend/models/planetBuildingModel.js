@@ -16,6 +16,10 @@ const planetBuildingSchema = mongoose.Schema({
         required: true,
         default: 1,
     },
+    active: {
+        type: Boolean,
+        default: true,
+    },
 }, 
 {
     timestamps: true,

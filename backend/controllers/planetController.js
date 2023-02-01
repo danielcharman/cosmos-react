@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 const User = require('../models/userModel')
 const Planet = require('../models/planetModel')
+const Building = require('../models/buildingModel')
 const PlanetBuilding = require('../models/planetBuildingModel')
 
 // @desc    Get planets
@@ -142,6 +143,52 @@ const getPlanetBuildings = asyncHandler(async (req, res) => {
 	res.status(200).json(planetBuildings)
 })
 
+// @desc    Get buildings queue and process it
+// @access  Private
+const processPlanetResources = asyncHandler(async (req, res) => {
+    const planets = await Planet.find()
+
+	const processedQueue = await Promise.all(planets.map(async (planet) => {	
+		const gameOreMine = await Building.findById('63d7afdf48791a8ebd439f3b')
+
+		const planetOreMine = await PlanetBuilding.findOne({
+			planet: new mongoose.mongo.ObjectId(planet._id),
+			building: new mongoose.mongo.ObjectId('63d7afdf48791a8ebd439f3b')
+		})
+
+		console.log(gameOreMine)
+
+		const newOre = (gameOreMine.production * ((gameOreMine.productionMultiplier ?? 1.5) * planetOreMine.level))
+		const newCrystal = 20 * 3.5
+		const newGas = 10 & 4.3
+
+		planet.set({
+			ore: (planet.ore + newOre).toFixed(0),
+			crystal: (planet.crystal + newCrystal).toFixed(0),
+			gas: (planet.gas + newGas).toFixed(0), 
+		})		
+
+		const updatedPlanet = await planet.save();
+		// console.log('updatedPlanet', updatedPlanet)
+
+		// //do stuff and then remove queue item
+		// const updatedBuilding = await PlanetBuilding.findByIdAndUpdate(
+		// 	queueItem.building,
+		// 	{
+		// 		level: queueItem.level,
+		// 		active: true,
+		// 	},
+		// 	{ new: true }
+		// )
+
+		// console.log(updatedBuilding)
+
+		// await queueItem.remove()
+
+		return {}
+	})); 
+})
+
 module.exports = {
     getAllPlanets,
 	getUserPlanets,
@@ -149,5 +196,6 @@ module.exports = {
     createPlanet,
     updatePlanet,
     deletePlanet,
-    getPlanetBuildings
+    getPlanetBuildings,
+	processPlanetResources
 }

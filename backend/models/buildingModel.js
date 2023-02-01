@@ -55,6 +55,16 @@ const buildingSchema = mongoose.Schema({
         required: [true, 'Please enter a gasMultipler'],
         default: 1.5,
     },
+    production: {
+        type: Number,
+        required: [true, 'Please enter a base production value'],
+        default: 1,
+    },
+    productionMultipler: {
+        type: Number,
+        required: [true, 'Please enter a productionMultipler'],
+        default: 1.5,
+    },
     attribute: {
         type: Number,
     },

@@ -198,25 +198,23 @@ const updatePlanetBuilding = asyncHandler(async (req, res) => {
 	//   throw new Error('Not Authorized')
 	// }
 
-
-	//TEMPORARY UPDATE
-			const updatedBuilding = await PlanetBuilding.findByIdAndUpdate(
-				req.params.planetBuildingId,
-				req.body,
-				{ new: true }
-			)
-	//-----------------
-
+	const updatedBuilding = await PlanetBuilding.findByIdAndUpdate(
+		req.params.planetBuildingId,
+		{
+			active: false
+		},
+		{ new: true }
+	)
 
 	//add upgrade to queue
-		var completedDate = new Date();
-		completedDate.setSeconds(completedDate.getSeconds() + durationSeconds);
+	var completedDate = new Date();
+	completedDate.setSeconds(completedDate.getSeconds() + durationSeconds);
 
-		// const queuedItem = await BuildingsQueue.create({
-		// 	building: req.params.planetBuildingId,
-		// 	completed: completedDate,
-		// 	level: req.body.level,
-		// })
+	const queuedItem = await BuildingsQueue.create({
+		building: req.params.planetBuildingId,
+		completed: completedDate,
+		level: req.body.level,
+	})
 
 	//charge planet with upgrade costs
 	const updatedPlanet = await Planet.findByIdAndUpdate(
@@ -229,7 +227,7 @@ const updatePlanetBuilding = asyncHandler(async (req, res) => {
 		{ new: true }
 	)
 
-	res.status(200).json(updatedBuilding)
+	res.status(200).json(queuedItem)
 })
 
 // @desc    Delete building

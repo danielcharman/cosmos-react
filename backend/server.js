@@ -28,3 +28,13 @@ app.use('/api/planets', require('./routes/planetRoutes'))
 app.use(errorHandler)
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+
+
+const {processBuildingQueue} = require('./controllers/queueController')
+const {processPlanetResources} = require('./controllers/planetController')
+
+setInterval(() => {
+    console.log('queue timer')
+    processBuildingQueue()
+    processPlanetResources()
+}, 5000);

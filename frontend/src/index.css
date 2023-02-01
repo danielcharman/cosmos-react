@@ -318,7 +318,16 @@ h3 {
 }
 
 .btn.btn-success {
-	background-color: var(--light-green);
+	background-color: var(--light-green) !important;
+}
+
+.btn.btn-danger {
+	background-color: var(--light-red);
+}
+
+.btn.disabled {
+    opacity: 0.2;
+	cursor: initial;
 }
 
 .form {
@@ -381,6 +390,10 @@ h3 {
 .badge.badge-success {
 	background-color: var(--light-green);
 } 
+
+.badge.badge-danger {
+	background-color: var(--light-red);
+}
 
 .modalContent {
 	background-color: #e5e5e5;
@@ -460,4 +473,8 @@ h3 {
     position: absolute;
     bottom: 5px;
     left: 5px;
+}
+
+.buildingTile.disabled .badge {
+    opacity: 0.2;
 }

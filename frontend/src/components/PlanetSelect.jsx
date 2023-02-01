@@ -17,6 +17,11 @@ function PlanetSelect() {
 
     useEffect(() => {
         dispatch(getUserPlanets())
+
+		// setInterval(() => {
+		// 	console.log('getUserPlanets timer')
+		// 	dispatch(getUserPlanets())
+		// }, 5000);
     }, [])
 
     useEffect(() => {
