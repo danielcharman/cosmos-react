@@ -7,35 +7,28 @@ function PlanetResources() {
     const {
 		currentPlanet, 
 		isLoading, 
-		isSuccess, 
-		isError, 
-		message
 	} = useSelector(state => state.planets)
 
-    // useEffect(() => {
-	// 	console.log(currentPlanet)
-    // }, [])
-
-	//.toLocaleString('en-US')
+	if(isLoading) return <></>
 
     return (
 		<ul className='headerResources'>
 			<li className='headerResourcesItem'>
 				<span className='headerResourcesItemLabel'>Ore</span>
 				<span className='headerResourcesItemValue'>
-					{currentPlanet.ore} / ??
+					{new Intl.NumberFormat('en-AU').format(currentPlanet.ore)}
 				</span>
 			</li>
 			<li className='headerResourcesItem'>
 				<span className='headerResourcesItemLabel'>Crystal</span>
 				<span className='headerResourcesItemValue'>
-					{currentPlanet.crystal} / ??
+					{new Intl.NumberFormat('en-AU').format(currentPlanet.crystal)}
 				</span>
 			</li>
 			<li className='headerResourcesItem'>
 				<span className='headerResourcesItemLabel'>Gas</span>
 				<span className='headerResourcesItemValue low'>
-					{currentPlanet.gas} / ??
+					{new Intl.NumberFormat('en-AU').format(currentPlanet.gas)}
 				</span>
 			</li>                
 		</ul>

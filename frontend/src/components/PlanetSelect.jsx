@@ -11,11 +11,17 @@ function PlanetSelect() {
     const {
 		planets, 
 		currentPlanet, 
+		isSuccess,
+		isLoading,
 	} = useSelector(state => state.planets)
 
     useEffect(() => {
         dispatch(getUserPlanets())
     }, [])
+
+    useEffect(() => {
+        dispatch(getUserPlanets())
+    }, [dispatch])
 
     const onToggle = () => {
         setIsOpen(!isOpen)
