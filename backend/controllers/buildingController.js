@@ -1,6 +1,5 @@
 const asyncHandler = require('express-async-handler')
 
-const User = require('../models/userModel')
 const Building = require('../models/buildingModel')
 const BuildingsQueue = require('../models/buildingsQueueModel')
 const Planet = require('../models/planetModel')
@@ -27,13 +26,13 @@ const getPlanetBuildings = asyncHandler(async (req, res) => {
 			building: building._id
 		})
 
-		if(!planetBuilding) {
-			planetBuilding = await PlanetBuilding.create({
-				planet: req.params.planetId,
-				building: building._id,
-				level: 1,
-			})
-		}
+		// if(!planetBuilding) {
+		// 	planetBuilding = await PlanetBuilding.create({
+		// 		planet: req.params.planetId,
+		// 		building: building._id,
+		// 		level: 1,
+		// 	})
+		// }
 
 		return {
 			building,
@@ -150,14 +149,6 @@ const updatePlanetBuilding = asyncHandler(async (req, res) => {
 		throw new Error('Planet Building not found')
 	}
 
-	//check if upgrade is already queued
-	const buildingQueue = await BuildingsQueue.findOne({building: req.params.planetBuildingId})
-
-	if (buildingQueue) {
-		res.status(500)
-		throw new Error('Building already in upgrade queue')
-	}
-
 	//get planet and building details to calculate costs
 	const building = await Building.findById(planetBuilding.building)
 	const planet = await Planet.findById(req.params.planetId)
@@ -198,25 +189,39 @@ const updatePlanetBuilding = asyncHandler(async (req, res) => {
 	//   throw new Error('Not Authorized')
 	// }
 
-	const updatedBuilding = await PlanetBuilding.findByIdAndUpdate(
-		req.params.planetBuildingId,
-		{
-			active: false
-		},
-		{ new: true }
-	)
+	// const updatedBuilding = await PlanetBuilding.findByIdAndUpdate(
+	// 	req.params.planetBuildingId,
+	// 	{
+	// 		active: false
+	// 	},
+	// 	{ new: true }
+	// )
+
+	//check if upgrade is already queued
+	const buildingQueue = await BuildingsQueue.findOne({building: req.params.planetBuildingId}).sort({completed: 'desc'})
+
+	let completedDate = new Date();
+	console.log('initial date', completedDate)
+	if (buildingQueue) {
+		completedDate = new Date(buildingQueue.completed)
+	}
+
+	console.log('weee', completedDate.getSeconds(), durationSeconds, completedDate.getSeconds() + durationSeconds)
 
 	//add upgrade to queue
-	var completedDate = new Date();
 	completedDate.setSeconds(completedDate.getSeconds() + durationSeconds);
 
+	console.log('completedDate2', completedDate)
+
+
 	const queuedItem = await BuildingsQueue.create({
+		planet: req.params.planetId,
 		building: req.params.planetBuildingId,
 		completed: completedDate,
 		level: req.body.level,
 	})
 
-	//charge planet with upgrade costs
+	//charge planet with upgrade costs 
 	const updatedPlanet = await Planet.findByIdAndUpdate(
 		req.params.planetId,
 		{

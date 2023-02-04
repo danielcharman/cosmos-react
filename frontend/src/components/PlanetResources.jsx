@@ -1,15 +1,11 @@
-import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 function PlanetResources() {
-    const dispatch = useDispatch()
-
     const {
-		currentPlanet, 
-		isLoading, 
+		currentPlanet,
 	} = useSelector(state => state.planets)
 
-	// if(isLoading) return <></>
+	if(!currentPlanet) return <></>
 
     return (
 		<ul className='headerResources'>

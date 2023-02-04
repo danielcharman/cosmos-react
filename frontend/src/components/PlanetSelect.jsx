@@ -1,36 +1,25 @@
 import { FaGlobe, FaAngleDown } from 'react-icons/fa'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { getUserPlanets, setCurrentPlanet } from '../features/planets/planetSlice'
+import { setCurrentPlanet } from '../features/planets/planetSlice'
+import { useNavigate } from 'react-router-dom'
 
 function PlanetSelect() {
     const [isOpen, setIsOpen] = useState(false)
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const {
 		planets, 
 		currentPlanet, 
-		isSuccess,
-		isLoading,
 	} = useSelector(state => state.planets)
-
-    useEffect(() => {
-        dispatch(getUserPlanets())
-
-		// setInterval(() => {
-		// 	console.log('getUserPlanets timer')
-		// 	dispatch(getUserPlanets())
-		// }, 5000);
-    }, [])
-
-    useEffect(() => {
-        dispatch(getUserPlanets())
-    }, [dispatch])
 
     const onToggle = () => {
         setIsOpen(!isOpen)
     }
+
+	if(!currentPlanet) return <></>
 
     return (
 		<div className='headerPlanets'>
@@ -55,6 +44,7 @@ function PlanetSelect() {
 					onClick={() => {
 						dispatch(setCurrentPlanet(planet))
 						onToggle()
+						navigate('/overview')
 					}}>
 						<span className='headerPlanetsPlanet'>
 							<FaGlobe className='headerPlanetsIcon' />

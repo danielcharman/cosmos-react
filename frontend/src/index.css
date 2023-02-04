@@ -20,9 +20,32 @@
 	padding: 0;
 	box-sizing: border-box;
 
-	-webkit-user-select: none; /* Safari */
-	-ms-user-select: none; /* IE 10 and IE 11 */
-	user-select: none; /* Standard syntax */
+	/* -webkit-user-select: none; 
+	-ms-user-select: none; 
+	user-select: none;  */
+}
+
+.link {
+	color: var(--light-blue);
+	font-weight: 700;
+}
+
+.link:hover {
+	border-bottom: 1px solid var(--light-blue);
+}
+
+.debug {
+	color: var(--light-red);
+	margin: 10px 0;
+	border: 1px solid var(--light-red);
+	padding: 5px;
+	font-size: 10px;
+	cursor: pointer;
+}
+
+.debug:hover {
+	background-color: var(--light-red);
+	color: white;
 }
 
 body {
@@ -114,21 +137,22 @@ h3 {
 }
 
 .headerMenuItem {
-	padding: 10px;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 	color: black;
 }
 
 .headerMenuItem a {
+	display: block;
 	color: inherit;
+	padding: 10px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.headerMenuItem:hover {
+.headerMenuItem a:hover {
 	background-color: #eee;
 	/* color: white; */
 }
 
-.headerMenuItem.active {
+.headerMenuItem.active a {
 	background-color: var(--light-blue);
 	color: white;
 }
@@ -157,6 +181,33 @@ h3 {
 	padding: 2px 5px;
 	border-radius: 3px;
 	margin-left: 5px;
+}
+
+.headerMenuSubMenu {
+	display: block;
+}
+
+.headerMenuSubMenu li {
+	display: block;
+	font-size: 13px;
+	padding: 5px 10px;
+	padding-left: 30px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	color: black;
+	line-height: 1.5;
+	font-weight: 600;
+}
+
+.headerMenuSubMenu li:hover {
+	background-color: #eee;
+	/* color: white; */
+}
+
+.headerMenuSubMenu li small {
+	display: block;
+	font-size: 10px;
+	/* color: rgba(0, 0, 0, 0.8); */
+	font-weight: 500;
 }
 
 .headerResources {
@@ -278,28 +329,11 @@ h3 {
 	height: 100%;
 }
 
-.homeImage {
-	width: 250px;
-	height: 250px;
-}
-
-.homeHeading {
-	font-size: 60px;
-	font-weight: 700;
-	text-shadow: 0px 6px rgb(0 0 0 / 80%);
-	margin-top: -50px;
-}
-
-.loginHeading {
-	font-size: 40px;
-	font-weight: 700;
-	text-shadow: 0px 6px rgb(0 0 0 / 80%);
-}
-
-.registerHeading {
-	font-size: 40px;
-	font-weight: 700;
-	text-shadow: 0px 6px rgb(0 0 0 / 80%);
+.cosmosImage {
+	width: 150px;
+	height: auto;
+	/* margin-bottom: -150px; */
+	/* opacity: 0.9; */
 }
 
 .btn {
@@ -378,13 +412,14 @@ h3 {
 .badge {
 	display: inline-block;
     padding: 0 4px;
-    font-size: 12px; 
-    font-weight: 700;
+    font-size: 10px; 
+    font-weight: 500;
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
     border-radius: 5px;
     color: white;
+	margin-left: 5px;
 } 
 
 .badge.badge-success {
@@ -414,6 +449,8 @@ h3 {
 	padding: 30px;
 	text-align: left;
 	font-size: 15px;
+	max-height: 400px;
+	overflow: auto;
 }
 
 .modalClose {
@@ -434,12 +471,14 @@ h3 {
 	text-transform: uppercase;
 	letter-spacing: 0;
 	text-align: center;
-	margin: 0 0 60px;
+	margin: 0 0 30px;
+	text-shadow: 0 5px rgba(0, 0, 0, 0.5)
 }
 
 .pageTitle small {
 	display: block;
 	color: #666;
+	color: var(--light-blue);
 	font-size: 30px;
 	font-weight: 300;
 	letter-spacing: 10px;

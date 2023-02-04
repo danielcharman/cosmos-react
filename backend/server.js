@@ -29,12 +29,12 @@ app.use(errorHandler)
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
 
-
-const {processBuildingQueue} = require('./controllers/queueController')
-const {processPlanetResources} = require('./controllers/planetController')
+const {
+    processBuildingQueue,
+	processPlanetResources
+} = require('./controllers/gameController')
 
 setInterval(() => {
-    console.log('queue timer')
     processBuildingQueue()
     processPlanetResources()
-}, 5000);
+}, 10000);

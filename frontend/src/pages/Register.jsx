@@ -3,14 +3,15 @@ import {useNavigate, Link} from 'react-router-dom'
 import {toast} from 'react-toastify'
 import {useSelector, useDispatch} from 'react-redux'
 import {register, reset} from '../features/auth/authSlice'
-import Spinner from '../components/Spinner'
+
+import planetImage from '../assets/img/planet.png'
 
 function Register() {
     const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        password: '',
-        password2: '',
+        name: 'Daniel',
+        email: 'hello@danielcharman.com',
+        password: 'password',
+        password2: 'password',
     })
 
     const {name, email, password, password2} = formData
@@ -25,8 +26,8 @@ function Register() {
             toast.error(message)
         }
         
-        if(isSuccess || user) {
-            navigate('/')
+        if(user) {
+            navigate('/overview')
         }
 
         dispatch(reset())
@@ -56,12 +57,13 @@ function Register() {
     }
 
     if (isLoading) {
-      return <Spinner />
+      return <></>
     }
 
     return (
         <>
-            <h1 className='registerHeading'>Register</h1>
+            <img src={planetImage} alt='Cosmos' className='cosmosImage' />
+            <h1 className="pageTitle">Cosmos <small>Register</small></h1>
             <section className='form'>
                 <form onSubmit={onSubmit}>
                     <div className='formGroup'>
@@ -77,8 +79,7 @@ function Register() {
                         <input type='password' className='formControl' id='password2' name='password2' value={password2} placeholder='Confirm Password' onChange={onChange} required />
                     </div>
                     <div className='formGroup'>
-                        <button className='btn btn-block'>Register</button>
-                        <p style={{marginTop: '30px'}}><Link to='/'>Back Home</Link></p>
+                        <button className='btn btn-block'>Register</button> or <Link to='/' className='link'>Login</Link>
                     </div>
                 </form>
             </section>

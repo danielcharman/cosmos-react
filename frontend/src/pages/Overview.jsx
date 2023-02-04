@@ -1,31 +1,26 @@
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+import DebugContainer from '../components/DebugContainer'
 
 import planetImage from '../assets/img/planet.png'
 
 function Overview() {
-    const dispatch = useDispatch()
-
     const {
-		currentPlanet, 
-		isLoading, 
-		isSuccess, 
-		isError, 
-		message
+		currentPlanet,
 	} = useSelector(state => state.planets)
 
-    if (isLoading) {
-      return 'Loading...'
-    }
+    const {user} = useSelector(state => state.auth)
+
+    if (!currentPlanet) return <></>
 
     return (
         <>
             <h1 className="pageTitle">Cosmos <small>Overview</small></h1>
-            <div style={{display: 'flex'}}>
-                <div style={{width: '50%'}}>
-                    <img src={planetImage} alt='Cosmos' style={{width: '300px', height: 'auto'}} />
+            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <div style={{width: '30%'}}>
+                    <img src={planetImage} alt='Cosmos' style={{width: '200px', height: 'auto'}} />
                 </div>
-                <div style={{width: '50%', textAlign: 'left'}}>
-                    <h2 style={{marginTop: 50}}>{currentPlanet.name}</h2>
+                <div style={{width: '30%', textAlign: 'left'}}>
+                    <h2>{currentPlanet.name}</h2>
                     <table className='table' style={{width: '100%'}}>
                         <tbody>
                             <tr>
@@ -46,6 +41,16 @@ function Overview() {
                     </table>
                 </div>
             </div>
+
+            <DebugContainer data={user._id}>
+                <span>user._id:</span>
+                {user._id}
+            </DebugContainer> 
+
+            <DebugContainer data={currentPlanet._id}>
+                <span>currentPlanet._id:</span>
+                {currentPlanet._id}
+            </DebugContainer>
         </>
         
     )

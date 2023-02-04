@@ -15,6 +15,10 @@ const {protect} = require('../middleware/authMiddleware')
 const buildingRouter = require('./buildingRoutes')
 router.use('/:planetId/buildings', buildingRouter)
 
+//reroute into note router
+const queueRouter = require('./queueRoutes')
+router.use('/:planetId/queue', queueRouter)
+
 router.route('/')
     .get(protect, getAllPlanets)
 

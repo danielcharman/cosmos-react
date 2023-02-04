@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { getUserPlanets, getPlanetBuildings, upgradePlanetBuilding } from '../features/planets/planetSlice'
+import { getUserPlanets, getPlanetQueue } from '../features/planets/planetSlice'
+import { getPlanetBuildings, upgradePlanetBuilding } from '../features/buildings/buildingSlice'
 import { FaTimes } from 'react-icons/fa'
 import Modal from 'react-modal'
+import DebugContainer from '../components/DebugContainer'
 
 const customStyles = {
     content: {
@@ -22,7 +24,7 @@ const customStyles = {
 
 Modal.setAppElement('#root')
 
-function Structures() {
+function Buildings() {
     const [modalIsOpen, setModalIsOpen] = useState(false)
     const [currentBuilding, setCurrentBuilding] = useState(null)
 
@@ -30,15 +32,17 @@ function Structures() {
 
     const {
         currentPlanet,
-		buildings, 
-        isLoading,
+        planets,
+        queue,
 	} = useSelector(state => state.planets)
 
+    const {
+		buildings, 
+	} = useSelector(state => state.buildings)
+
     useEffect(() => {
-        if(currentPlanet._id) {
-            dispatch(getPlanetBuildings(currentPlanet._id))
-        } 
-    }, [modalIsOpen, currentPlanet])
+        if(currentPlanet) dispatch(getPlanetBuildings(currentPlanet._id)) 
+    }, [modalIsOpen, currentPlanet, queue, planets])
 
     // Open/close modal
     const openModal = () => setModalIsOpen(true)
@@ -53,6 +57,7 @@ function Structures() {
             level: level
         }))
         dispatch(getUserPlanets())
+        dispatch(getPlanetQueue(currentPlanet._id))
         closeModal()
     }
 
@@ -70,13 +75,10 @@ function Structures() {
         if(!canAfford(oreCost, currentPlanet.ore)) return false
         if(!canAfford(crystalCost, currentPlanet.crystal)) return false
         if(!canAfford(gasCost, currentPlanet.gas)) return false
-        console.log('true')
         return true
     }
 
-    // if (isLoading) {
-    //     return 'Loading'
-    // }
+    if (!currentPlanet) return <></>
 
     let duration, oreCost, crystalCost, gasCost
 
@@ -108,7 +110,7 @@ function Structures() {
 
     return (
         <>
-            <h1 className="pageTitle">Cosmos <small>Structures</small></h1>
+            <h1 className="pageTitle">Cosmos <small>Buildings</small></h1>
 
             <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>
                 {buildings.map((building, index) => {
@@ -119,7 +121,7 @@ function Structures() {
                                 setCurrentBuilding(building)
                                 openModal()
                             }}>
-                                <img src={`/assets/img/structure/${building.building.name.replace(/ /g,"_")}.jpg`} alt={building.building.name} className='img' />
+                                <img src={`/assets/img/building/${building.building.name.replace(/ /g,"_")}.jpg`} alt={building.building.name} className='img' />
                                 <span className='badge badge-success'>
                                     {building.planetBuilding.level}
                                 </span>
@@ -191,6 +193,16 @@ function Structures() {
                             }}>
                                 Upgrade to level {currentBuilding.planetBuilding.level + 1}
                             </button>
+
+                            <DebugContainer data={currentBuilding.planetBuilding._id}>
+                                <span>planetBuilding._id:</span>
+                                {currentBuilding.planetBuilding._id}
+                            </DebugContainer>
+
+                            <DebugContainer data={currentBuilding.planetBuilding.building}>
+                                <span>planetBuilding.building:</span>
+                                {currentBuilding.planetBuilding.building}
+                            </DebugContainer> 
                         </div>
                     </div>
                 </Modal>
@@ -199,4 +211,4 @@ function Structures() {
     )
 }
 
-export default Structures
+export default Buildings

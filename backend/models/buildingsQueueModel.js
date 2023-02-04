@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 
 const buildingsQueueSchema = mongoose.Schema({
+    planet: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Planet',
+    },
     building: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,

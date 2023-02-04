@@ -3,12 +3,13 @@ import {toast} from 'react-toastify'
 import {useSelector, useDispatch} from 'react-redux'
 import {useNavigate, Link} from 'react-router-dom'
 import {login, reset} from '../features/auth/authSlice'
-import Spinner from '../components/Spinner'
+
+import planetImage from '../assets/img/planet.png'
 
 function Login() {
     const [formData, setFormData] = useState({
-        email: '',
-        password: '',
+        email: 'hello@danielcharman.com',
+        password: 'password',
     })
 
     const {email, password} = formData
@@ -49,12 +50,13 @@ function Login() {
     }
 
     if (isLoading) {
-      return <Spinner />
+      return <></>
     }
 
     return (
         <>
-            <h1 className='loginHeading'>Login</h1>
+            <img src={planetImage} alt='Cosmos' className='cosmosImage' />
+            <h1 className="pageTitle">Cosmos <small>Login</small></h1>
             <section className='form'>
                 <form onSubmit={onSubmit}>
                     <div className='formGroup'>
@@ -64,8 +66,7 @@ function Login() {
                         <input type='password' className='formControl' id='password' name='password' value={password} placeholder='Your Password' onChange={onChange} required />
                     </div>
                     <div className='formGroup'>
-                        <button className='btn'>Login</button> 
-                        <p style={{marginTop: '30px'}}><Link to='/'>Back Home</Link></p>
+                        <button className='btn'>Login</button> or <Link to='/register' className='link'>Register</Link>
                     </div>
                 </form>
             </section>
