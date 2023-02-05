@@ -4,6 +4,7 @@
 	--light-blue: #007bff;
 	--light-green: #28a745;
 	--light-red: #dc3545;
+	--light-grey: #666;
 	--coal: #343a40;
 }
 
@@ -418,7 +419,11 @@ h3 {
 }
 
 .badge.badge-normal {
-	background-color: rgba(255,255,255,0.2);
+	background-color: var(--light-grey);
+}
+
+.badge.badge-info {
+	background-color: var(--light-blue);
 }
 
 .badge.badge-large {
@@ -445,7 +450,7 @@ h3 {
 	padding: 30px;
 	text-align: left;
 	font-size: 14px;
-	max-height: 400px;
+	max-height: 60vh;
 	overflow: auto;
 }
 
@@ -467,6 +472,7 @@ h3 {
 	background-color: white;
 	margin-right: 5px; 
 	text-align: right;
+	color: black;
 }
 
 .pageTitle {
@@ -495,7 +501,7 @@ h3 {
     cursor: pointer;
     background-color: #000000;
     border-radius: 10px;
-    border: 3px solid white;
+    border: 3px solid var(--light-grey);
 }
 
 .tileItem.disabled {

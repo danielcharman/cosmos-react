@@ -42,15 +42,19 @@ function Overview() {
                 </div>
             </div>
 
-            <DebugContainer data={user._id}>
-                <span>user._id:</span>
-                {user._id}
-            </DebugContainer> 
+            {(process.env.REACT_APP_DEBUG_MODE === 'true') && (
+                <>
+                    <DebugContainer data={user._id}>
+                        <span>user._id:</span>
+                        {user._id}
+                    </DebugContainer> 
 
-            <DebugContainer data={currentPlanet._id}>
-                <span>currentPlanet._id:</span>
-                {currentPlanet._id}
-            </DebugContainer>
+                    <DebugContainer data={currentPlanet._id}>
+                        <span>currentPlanet._id:</span>
+                        {currentPlanet._id}
+                    </DebugContainer> 
+                </>
+            )}   
         </>
         
     )

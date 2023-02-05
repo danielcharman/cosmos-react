@@ -250,15 +250,19 @@ function Buildings() {
                                 Upgrade to level {currentBuilding.planetBuilding.level + 1}
                             </button>
 
-                            <DebugContainer data={currentBuilding.planetBuilding._id}>
-                                <span>planetBuilding._id:</span>
-                                {currentBuilding.planetBuilding._id}
-                            </DebugContainer>
+                            {(process.env.REACT_APP_DEBUG_MODE === 'true') && (
+                                <>
+                                    <DebugContainer data={currentBuilding.planetBuilding._id}>
+                                        <span>planetBuilding._id:</span>
+                                        {currentBuilding.planetBuilding._id}
+                                    </DebugContainer>
 
-                            <DebugContainer data={currentBuilding.planetBuilding.building}>
-                                <span>planetBuilding.building:</span>
-                                {currentBuilding.planetBuilding.building}
-                            </DebugContainer> 
+                                    <DebugContainer data={currentBuilding.planetBuilding.building}>
+                                        <span>planetBuilding.building:</span>
+                                        {currentBuilding.planetBuilding.building}
+                                    </DebugContainer>  
+                                </>
+                            )}   
                         </div>
                     </div>
                 </Modal>

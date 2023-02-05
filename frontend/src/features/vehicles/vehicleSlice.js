@@ -61,18 +61,18 @@ export const vehicleSlice = createSlice({
                 state.message = action.payload
             })
 
-        //     .addCase(upgradePlanetVehicle.pending, (state) => {
-        //         state.isLoading = true
-        //     })
-        //     .addCase(upgradePlanetVehicle.fulreducerfilled, (state, action) => {
-        //         state.isLoading = false
-        //         state.isSuccess = true
-        //     })
-        //     .addCase(upgradePlanetVehicle.rejected, (state, action) => {
-        //         state.isLoading = false
-        //         state.isError = true
-        //         state.message = action.payload
-        //     })
+            .addCase(upgradePlanetVehicle.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(upgradePlanetVehicle.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+            })
+            .addCase(upgradePlanetVehicle.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
     }
 })
 

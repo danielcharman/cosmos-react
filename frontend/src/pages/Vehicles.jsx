@@ -28,6 +28,8 @@ function Vehicles() {
     const [modalIsOpen, setModalIsOpen] = useState(false)
     const [currentVehicle, setCurrentVehicle] = useState(null)
 
+    const [vehicleBuildQuantity, setVehicleBuildQuantity] = useState(1)
+
     const dispatch = useDispatch()
 
     const {
@@ -44,17 +46,26 @@ function Vehicles() {
         if(currentPlanet) dispatch(getPlanetVehicles(currentPlanet._id)) 
     }, [modalIsOpen, currentPlanet, queue, planets])
 
+    const onChangeQuantity = (e) => {
+        let quantity = (e.target.value > 1) ? e.target.value : 1;
+
+        setVehicleBuildQuantity(quantity)
+    }
+
     // Open/close modal
     const openModal = () => setModalIsOpen(true)
-    const closeModal = () => setModalIsOpen(false)
+    const closeModal = () => {
+        setModalIsOpen(false)
+        setVehicleBuildQuantity(1)
+    }
 
-    const getMultipliedValue = (base, multiplier, quantity) => (base * (multiplier * quantity))
+    const getMultipliedValue = (base, quantity) => (base * quantity)
 
-    const onUpgrade = (planetVehicleId, quantity) => {
+    const onUpgrade = (planetVehicleId) => {
         dispatch(upgradePlanetVehicle({
             planetId: currentPlanet._id, 
             planetVehicleId: planetVehicleId, 
-            quantity: quantity
+            quantity: vehicleBuildQuantity
         }))
         dispatch(getUserPlanets())
         dispatch(getPlanetQueue(currentPlanet._id))
@@ -81,44 +92,27 @@ function Vehicles() {
 
     if (!currentPlanet) return <></>
 
-    let duration, production, oreCost, crystalCost, gasCost
+    let duration, oreCost, crystalCost, gasCost
 
     if(currentVehicle && currentVehicle.planetVehicle) {
         duration = getMultipliedValue(
             currentVehicle.vehicle.duration,
-            currentVehicle.vehicle.durationMultipler,
-            (currentVehicle.planetVehicle.quantity + 1)
+            vehicleBuildQuantity
         )
-        
-        production = {
-            current: getMultipliedValue(
-                        currentVehicle.vehicle.production,
-                        currentVehicle.vehicle.productionMultipler,
-                        (currentVehicle.planetVehicle.quantity)
-                    ),
-            next: getMultipliedValue(
-                currentVehicle.vehicle.production,
-                currentVehicle.vehicle.productionMultipler,
-                (currentVehicle.planetVehicle.quantity + 1)
-            ), 
-        }
 
         oreCost = getMultipliedValue(
             currentVehicle.vehicle.ore,
-            currentVehicle.vehicle.oreMultipler,
-            (currentVehicle.planetVehicle.quantity + 1)
+            vehicleBuildQuantity
         )
 
         crystalCost = getMultipliedValue(
             currentVehicle.vehicle.crystal,
-            currentVehicle.vehicle.crystalMultipler,
-            (currentVehicle.planetVehicle.quantity + 1)
+            vehicleBuildQuantity
         )
 
         gasCost = getMultipliedValue(
             currentVehicle.vehicle.gas,
-            currentVehicle.vehicle.crystalMultipler,
-            (currentVehicle.planetVehicle.quantity + 1)
+            vehicleBuildQuantity
         )
     }
 
@@ -130,31 +124,28 @@ function Vehicles() {
                 {vehicles.map((vehicle, index) => {
                     var vehicleOreCost = getMultipliedValue(
                         vehicle.vehicle.ore,
-                        vehicle.vehicle.oreMultipler,
-                        ((vehicle.planetVehicle ? vehicle.planetVehicle.quantity : 1) + 1)
+                        vehicleBuildQuantity
                     )
             
                     var vehicleCrystalCost = getMultipliedValue(
                         vehicle.vehicle.crystal,
-                        vehicle.vehicle.crystalMultipler,
-                        ((vehicle.planetVehicle ? vehicle.planetVehicle.quantity : 1) + 1)
+                        vehicleBuildQuantity
                     )
             
                     var vehicleGasCost = getMultipliedValue(
                         vehicle.vehicle.gas,
-                        vehicle.vehicle.crystalMultipler,
-                        ((vehicle.planetVehicle ? vehicle.planetVehicle.quantity : 1) + 1)
+                        vehicleBuildQuantity
                     )
 
                     return (
                         <div key={index} style={{width: '16.6666%'}}>
-                            <div className={'tileItem ' + (isDisabled(vehicle) && 'disabled') + ' ' + (canAffordAll(vehicleOreCost, vehicleCrystalCost, vehicleGasCost) ? 'tileItem-success' : 'tileItem-danger')} title={vehicle.vehicle.name} onClick={() => {
+                            <div className={'tileItem ' + (isDisabled(vehicle) && 'disabled')} title={vehicle.vehicle.name} onClick={() => {
                                 if(isDisabled(vehicle)) return
                                 setCurrentVehicle(vehicle)
                                 openModal()
                             }}>
                                 <img src={`/assets/img/vehicle/${vehicle.vehicle.name.replace(/ /g,"_")}.jpg`} alt={vehicle.vehicle.name} className='img' />
-                                <span className={'badge ' + (canAffordAll(vehicleOreCost, vehicleCrystalCost, vehicleGasCost) ? 'badge-success' : 'badge-danger')}>
+                                <span className='badge badge-normal'>
                                     {(vehicle.planetVehicle) ? vehicle.planetVehicle.quantity : 1}
                                 </span>
                             </div>
@@ -194,7 +185,7 @@ function Vehicles() {
                                             Production Duration 
                                         </th>
                                         <td style={{width: '65%'}}>
-                                            {duration / 60} minutes / unit
+                                            {duration / 60} minute{(duration / 60 > 1) && 's'} <span className='badge badge-normal'>{currentVehicle.vehicle.duration / 60} minute{(currentVehicle.vehicle.duration / 60 > 1) && 's'} / unit</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -229,24 +220,30 @@ function Vehicles() {
                                 </tbody>
                             </table>
 
-                            <input type='text' className='formControl modalQuantity' id='quantity' name='quantity' placeholder='Quantity' defaultValue='1' required />
+                            <input type='number' min='1' className='formControl modalQuantity' id='quantity' name='quantity' placeholder='Quantity' value={vehicleBuildQuantity} onChange={onChangeQuantity} required />
 
                             <button className={'btn ' + ((canAffordAll(oreCost, crystalCost, gasCost)) ? 'btn-success' : 'btn-danger') + ((!canAffordAll(oreCost, crystalCost, gasCost) || isDisabled(currentVehicle)) ? ' disabled' : '')} onClick={() => {
                                 if(isDisabled(currentVehicle)) return
-                                onUpgrade(currentVehicle.planetVehicle._id, currentVehicle.planetVehicle.quantity + 1)
+                                onUpgrade(currentVehicle.planetVehicle._id)
                             }}>
-                                Buy Vehicle(s)
+                                Buy Vehicle{(vehicleBuildQuantity > 1) && 's'}
                             </button>
 
-                            <DebugContainer data={currentVehicle.planetVehicle._id}>
-                                <span>planetVehicle._id:</span>
-                                {currentVehicle.planetVehicle._id}
-                            </DebugContainer>
+                            {(process.env.REACT_APP_DEBUG_MODE === 'true') && (
+                                <>
+                                    <DebugContainer data={currentVehicle.planetVehicle._id}>
+                                        <span>planetVehicle._id:</span>
+                                        {currentVehicle.planetVehicle._id}
+                                    </DebugContainer>
 
-                            <DebugContainer data={currentVehicle.planetVehicle.vehicle}>
-                                <span>planetVehicle.vehicle:</span>
-                                {currentVehicle.planetVehicle.vehicle}
-                            </DebugContainer> 
+                                    <DebugContainer data={currentVehicle.planetVehicle.vehicle}>
+                                        <span>planetVehicle.vehicle:</span>
+                                        {currentVehicle.planetVehicle.vehicle}
+                                    </DebugContainer> 
+                                </>
+                            )}   
+
+
                         </div>
                     </div>
                 </Modal>

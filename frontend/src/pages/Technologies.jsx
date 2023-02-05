@@ -250,15 +250,19 @@ function Technologies() {
                                 Upgrade to level {currentTechnology.planetTechnology.level + 1}
                             </button>
 
-                            <DebugContainer data={currentTechnology.planetTechnology._id}>
-                                <span>planetTechnology._id:</span>
-                                {currentTechnology.planetTechnology._id}
-                            </DebugContainer>
+                            {(process.env.REACT_APP_DEBUG_MODE === 'true') && (
+                                <>
+                                    <DebugContainer data={currentTechnology.planetTechnology._id}>
+                                        <span>planetTechnology._id:</span>
+                                        {currentTechnology.planetTechnology._id}
+                                    </DebugContainer>
 
-                            <DebugContainer data={currentTechnology.planetTechnology.technology}>
-                                <span>planetTechnology.technology:</span>
-                                {currentTechnology.planetTechnology.technology}
-                            </DebugContainer> 
+                                    <DebugContainer data={currentTechnology.planetTechnology.technology}>
+                                        <span>planetTechnology.technology:</span>
+                                        {currentTechnology.planetTechnology.technology}
+                                    </DebugContainer>  
+                                </>
+                            )}   
                         </div>
                     </div>
                 </Modal>

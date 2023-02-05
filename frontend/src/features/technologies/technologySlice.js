@@ -61,18 +61,18 @@ export const technologySlice = createSlice({
                 state.message = action.payload
             })
 
-        //     .addCase(upgradePlanetTechnology.pending, (state) => {
-        //         state.isLoading = true
-        //     })
-        //     .addCase(upgradePlanetTechnology.fulreducerfilled, (state, action) => {
-        //         state.isLoading = false
-        //         state.isSuccess = true
-        //     })
-        //     .addCase(upgradePlanetTechnology.rejected, (state, action) => {
-        //         state.isLoading = false
-        //         state.isError = true
-        //         state.message = action.payload
-        //     })
+            .addCase(upgradePlanetTechnology.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(upgradePlanetTechnology.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+            })
+            .addCase(upgradePlanetTechnology.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
     }
 })
 

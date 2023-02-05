@@ -64,19 +64,15 @@ const updatePlanetVehicle = asyncHandler(async (req, res) => {
 
 	const {
 		duration, 
-		durationMultipler,
 		ore, 
-		oreMultipler,
 		crystal,
-		crystalMultipler,
 		gas,
-		gasMultipler
 	} = vehicle
 
-	const durationSeconds = duration * (durationMultipler * req.body.quantity)
-	const oreCost = ore * (oreMultipler * req.body.quantity)
-	const crystalCost = crystal * (crystalMultipler * req.body.quantity)
-	const gasCost = gas * (gasMultipler * req.body.quantity)
+	const durationSeconds = duration * req.body.quantity
+	const oreCost = ore * req.body.quantity
+	const crystalCost = crystal * req.body.quantity
+	const gasCost = gas * req.body.quantity
 
 	if(oreCost > planet.ore) {
 		res.status(500)

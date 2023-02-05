@@ -74,14 +74,24 @@ const processUpgradeQueue = asyncHandler(async (req, res) => {
 
 	const processedVehiclesQueue = await Promise.all(vehiclesQueue.map(async (queueItem) => {
 		//do stuff and then remove queue item
-		const updatedVehicle = await PlanetVehicle.findByIdAndUpdate(
-			queueItem.vehicle,
-			{
-				quantity: queueItem.quantity,
-				active: true,
+		// const updatedVehicle = await PlanetVehicle.findByIdAndUpdate(
+		// 	queueItem.vehicle,
+		// 	{
+		// 		quantity: queueItem.quantity,
+		// 		active: true,
+		// 	},
+		// 	{ new: true }
+		// )
+
+		const updatedVehicle = await PlanetVehicle.findOneAndUpdate({
+			_id: queueItem.vehicle
+		}, {
+			$inc: {
+				quantity: queueItem.quantity
 			},
-			{ new: true }
-		)
+			active: true,
+		}).exec()
+
 
 		await queueItem.remove()
 
