@@ -3,15 +3,15 @@ const mongoose = require('mongoose');
 
 const Planet = require('../models/planetModel')
 
-const Building = require('../models/buildingModel')
-const BuildingsQueue = require('../models/buildingsQueueModel')
-const PlanetBuilding = require('../models/planetBuildingModel')
+const Research = require('../models/researchModel')
+const ResearchsQueue = require('../models/researchsQueueModel')
+const PlanetResearch = require('../models/planetResearchModel')
 
-// @desc    Get planet buildings
-// @route   GET /api/planets/:id/buildings 
+// @desc    Get planet researchs
+// @route   GET /api/planets/:id/research 
 // @access  Private
-const getPlanetBuildings = asyncHandler(async (req, res) => {
-    const tempBuildings = await Building.find()
+const getPlanetResearchs = asyncHandler(async (req, res) => {
+    const tempResearchs = await Research.find()
 
 	const planet = await Planet.findById(req.params.planetId)
 
@@ -20,30 +20,30 @@ const getPlanetBuildings = asyncHandler(async (req, res) => {
 	  throw new Error('Not Authorized')
 	}
 
-	const buildings = await Promise.all(tempBuildings.map(async (building) => {
-		let planetBuilding = await PlanetBuilding.findOne({
+	const researchs = await Promise.all(tempResearchs.map(async (research) => {
+		let planetResearch = await PlanetResearch.findOne({
 			planet: req.params.planetId,
-			building: building._id
+			research: research._id
 		})
 
 		return {
-			building,
-			planetBuilding,
+			research,
+			planetResearch,
 		}
 	})); 
 
-    if (!buildings) {
+    if (!researchs) {
         res.status(404)
-        throw new Error('Planet buildings not found ' + req.params.planetId)
+        throw new Error('Planet researchs not found ' + req.params.planetId)
     }
 
-    res.status(200).json(buildings)
+    res.status(200).json(researchs)
 })
 
-// @desc    Update building
-// @route   PUT /api/planets/:id/buildings/:id
+// @desc    Update research
+// @route   PUT /api/planets/:id/research/:id
 // @access  Private
-const updatePlanetBuilding = asyncHandler(async (req, res) => {
+const updatePlanetResearch = asyncHandler(async (req, res) => {
 	const planet = await Planet.findById(req.params.planetId)
 
 	if (planet.user.toString() !== req.user.id) {
@@ -51,16 +51,16 @@ const updatePlanetBuilding = asyncHandler(async (req, res) => {
 	  throw new Error('Not Authorized')
 	}
 	
-	//check planet building exists
-	const planetBuilding = await PlanetBuilding.findById(req.params.planetBuildingId)
+	//check planet research exists
+	const planetResearch = await PlanetResearch.findById(req.params.planetResearchId)
 
-	if (!planetBuilding) {
+	if (!planetResearch) {
 		res.status(404)
-		throw new Error('Planet Building not found')
+		throw new Error('Planet Research not found')
 	}
 
-	//get planet and building details to calculate costs
-	const building = await Building.findById(planetBuilding.building)
+	//get planet and research details to calculate costs
+	const research = await Research.findById(planetResearch.research)
 
 	const {
 		duration, 
@@ -71,7 +71,7 @@ const updatePlanetBuilding = asyncHandler(async (req, res) => {
 		crystalMultipler,
 		gas,
 		gasMultipler
-	} = building
+	} = research
 
 	const durationSeconds = duration * (durationMultipler * req.body.level)
 	const oreCost = ore * (oreMultipler * req.body.level)
@@ -93,8 +93,8 @@ const updatePlanetBuilding = asyncHandler(async (req, res) => {
 		throw new Error('Planet does not have enough gas')
 	}
 
-	const updatedBuilding = await PlanetBuilding.findByIdAndUpdate(
-		req.params.planetBuildingId,
+	const updatedResearch = await PlanetResearch.findByIdAndUpdate(
+		req.params.planetResearchId,
 		{
 			active: false
 		},
@@ -102,19 +102,19 @@ const updatePlanetBuilding = asyncHandler(async (req, res) => {
 	)
 
 	//check if upgrade is already queued
-	const buildingQueue = await BuildingsQueue.findOne({building: req.params.planetBuildingId}).sort({completed: 'desc'})
+	const researchQueue = await ResearchsQueue.findOne({research: req.params.planetResearchId}).sort({completed: 'desc'})
 
 	let completedDate = new Date();
-	if (buildingQueue) {
-		completedDate = new Date(buildingQueue.completed)
+	if (researchQueue) {
+		completedDate = new Date(researchQueue.completed)
 	}
 
 	//add upgrade to queue
 	completedDate.setSeconds(completedDate.getSeconds() + durationSeconds);
 
-	const queuedItem = await BuildingsQueue.create({
+	const queuedItem = await ResearchsQueue.create({
 		planet: req.params.planetId,
-		building: req.params.planetBuildingId,
+		research: req.params.planetResearchId,
 		completed: completedDate,
 		level: req.body.level,
 	})
@@ -134,6 +134,6 @@ const updatePlanetBuilding = asyncHandler(async (req, res) => {
 })
 
 module.exports = {
-    getPlanetBuildings,
-    updatePlanetBuilding,
+    getPlanetResearchs,
+    updatePlanetResearch, 
 }

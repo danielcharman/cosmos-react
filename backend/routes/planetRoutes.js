@@ -1,29 +1,19 @@
 const express = require('express')
 const router = express.Router({mergeParams: true})
-const {
-    getAllPlanets, 
-    getPlanet, 
-    createPlanet, 
-    updatePlanet, 
-    deletePlanet,
-    getPlanetBuildings
-} = require('../controllers/planetController')
+// const {} = require('../controllers/planetController')
 
 const {protect} = require('../middleware/authMiddleware')
 
-//reroute into note router
-const buildingRouter = require('./buildingRoutes')
-router.use('/:planetId/buildings', buildingRouter)
+//reroute into buildings router
+const planetBuildingRouter = require('./planetBuildingRoutes')
+router.use('/:planetId/buildings', planetBuildingRouter)
 
-//reroute into note router
+//reroute into research router
+const planetResearchRouter = require('./planetResearchRoutes')
+router.use('/:planetId/research', planetResearchRouter)
+
+//reroute into queue router
 const queueRouter = require('./queueRoutes')
 router.use('/:planetId/queue', queueRouter)
-
-router.route('/')
-    .get(protect, getAllPlanets)
-
-router.route('/:id')
-    .get(protect, getPlanet)
-
 
 module.exports = router

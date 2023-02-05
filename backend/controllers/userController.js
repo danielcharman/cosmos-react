@@ -4,9 +4,14 @@ const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose');
 
 const User = require('../models/userModel')
+
 const Planet = require('../models/planetModel')
-const PlanetBuilding = require('../models/planetBuildingModel')
+
 const Building = require('../models/buildingModel')
+const PlanetBuilding = require('../models/planetBuildingModel')
+
+const Research = require('../models/researchModel')
+const PlanetResearch = require('../models/planetResearchModel')
 
 // @desc    Register a new user
 // @route   /api/users
@@ -66,6 +71,25 @@ const registerUser = asyncHandler(async (req, res) => {
             return
         })); 
 
+        const tempResearchs = await Research.find()
+
+        const researchs = await Promise.all(tempResearchs.map(async (research) => {
+            let planetResearch = await PlanetResearch.findOne({
+                planet: planet._id,
+                research: research._id
+            })
+    
+            if(!planetResearch) {
+                planetResearch = await PlanetResearch.create({
+                    planet: planet._id,
+                    research: research._id,
+                    level: 1,
+                })
+            }
+    
+            return
+        })); 
+
         res.status(201).json({
             _id: user._id,
             name: user.name,
@@ -99,19 +123,6 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new Error('Invalid credentials')
     }
 })
-
-// @desc    Get current user
-// @route   /api/users/me
-// @access  Private
-const getMe = asyncHandler(async (req, res) => {
-    const user = {
-        id: req.user._id,
-        email: req.user.email,
-        name: req.user.name,
-    }
-    res.status(200).json(user)
-})
-
 
 //secret bonus feature
 const superDeleteUser = asyncHandler(async (req, res) => {
@@ -154,6 +165,5 @@ const generateToken = (id) => {
 module.exports = {
     registerUser,
     loginUser,
-    getMe,
     superDeleteUser,
 }

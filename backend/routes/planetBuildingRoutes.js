@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router({mergeParams: true})
 
 const {
-    getAllBuildings, 
     getPlanetBuildings,
     updatePlanetBuilding,
 } = require('../controllers/buildingController')

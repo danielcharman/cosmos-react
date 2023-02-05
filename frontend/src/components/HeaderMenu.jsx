@@ -59,7 +59,6 @@ function HeaderMenu() {
                         <li key={queueItem.queueItem._id}>
                             {queueItem.building.name}
                             <span className="badge badge-success">{queueItem.queueItem.level}</span>
-                            <div>{queueItem.queueItem.completed}</div>
                             {(index === 0) 
                                 ? <Countdown initialDate={queueItem.queueItem.completed} onComplete={onComplete} />
                                 :  <small>In queue</small>

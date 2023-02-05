@@ -16,16 +16,19 @@ function Header() {
     const dispatch = useDispatch()
 
     useEffect(() => {
+        dispatch(getUserPlanets())
+    }, [user])
+
+    useEffect(() => {
         if(planets.length === 0) dispatch(getUserPlanets())
         if(currentPlanet) dispatch(getPlanetQueue(currentPlanet._id))
     }, [planets])
 
     useEffect(() => {
-        console.log('Starting Game Timer');
 		const interval = setInterval(() => {
+            console.log('Running Game Timer');
             dispatch(getUserPlanets())
             if(currentPlanet) dispatch(getPlanetQueue(currentPlanet._id))
-            console.log('Running Game Timer');
 		}, 5000);
 	
 		return () => clearInterval(interval);

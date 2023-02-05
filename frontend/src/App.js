@@ -63,9 +63,11 @@ function App() {
 								}
 							/>
 						</Routes>
-						<Link to='/logout' className='btn btn-danger' style={{position: 'absolute', bottom: 15, right: 15}}>
-							Logout
-						</Link>
+						{
+						// <Link to='/logout' className='btn btn-danger' style={{position: 'absolute', bottom: 15, right: 15}}>
+						// 	Logout
+						// </Link>
+						}
 					</div>
 				</main>
 			</Router>

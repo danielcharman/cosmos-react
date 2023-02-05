@@ -1,4 +1,4 @@
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 function PlanetResources() {
     const {
@@ -10,21 +10,21 @@ function PlanetResources() {
     return (
 		<ul className='headerResources'>
 			<li className='headerResourcesItem'>
-				<span className='headerResourcesItemLabel'>Ore</span>
-				<span className='headerResourcesItemValue'>
-					{new Intl.NumberFormat('en-AU').format(currentPlanet.ore)}
+				Ore
+				<span className={'badge ' + ((currentPlanet.resources.ore.current !== currentPlanet.resources.ore.capacity && currentPlanet.resources.ore.current > 100) ? 'badge-success' : 'badge-danger')}>
+					{new Intl.NumberFormat('en-AU').format(currentPlanet.resources.ore.current)} / {new Intl.NumberFormat('en-AU').format(currentPlanet.resources.ore.capacity)}
 				</span>
 			</li>
 			<li className='headerResourcesItem'>
-				<span className='headerResourcesItemLabel'>Crystal</span>
-				<span className='headerResourcesItemValue'>
-					{new Intl.NumberFormat('en-AU').format(currentPlanet.crystal)}
+				Crystal
+				<span className={'badge ' + ((currentPlanet.resources.crystal.current !== currentPlanet.resources.crystal.capacity && currentPlanet.resources.crystal.current > 100) ? 'badge-success' : 'badge-danger')}>
+					{new Intl.NumberFormat('en-AU').format(currentPlanet.resources.crystal.current)} / {new Intl.NumberFormat('en-AU').format(currentPlanet.resources.crystal.capacity)}
 				</span>
 			</li>
 			<li className='headerResourcesItem'>
-				<span className='headerResourcesItemLabel'>Gas</span>
-				<span className='headerResourcesItemValue low'>
-					{new Intl.NumberFormat('en-AU').format(currentPlanet.gas)}
+				Gas
+				<span className={'badge ' + ((currentPlanet.resources.gas.current !== currentPlanet.resources.gas.capacity && currentPlanet.resources.gas.current > 100) ? 'badge-success' : 'badge-danger')}>
+					{new Intl.NumberFormat('en-AU').format(currentPlanet.resources.gas.current)} / {new Intl.NumberFormat('en-AU').format(currentPlanet.resources.gas.capacity)}
 				</span>
 			</li>                
 		</ul>

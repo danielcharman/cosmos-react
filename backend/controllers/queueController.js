@@ -1,14 +1,27 @@
 const asyncHandler = require('express-async-handler')
 const mongoose = require('mongoose');
 
+const Planet = require('../models/planetModel')
+
 const Building = require('../models/buildingModel')
 const BuildingsQueue = require('../models/buildingsQueueModel')
 const PlanetBuilding = require('../models/planetBuildingModel')
 
-// @desc    Get planet buildings
-// @route   GET /api/planets/:id/buildings 
+const Research = require('../models/researchModel')
+const ResearchsQueue = require('../models/researchsQueueModel')
+const PlanetResearch = require('../models/planetResearchModel')
+
+// @desc    Get planet queues
+// @route   GET /api/planets/:id/queue 
 // @access  Private
 const getPlanetQueue = asyncHandler(async (req, res) => {
+	const planet = await Planet.findById(req.params.planetId)
+
+	if (planet.user.toString() !== req.user.id) {
+	  res.status(401)
+	  throw new Error('Not Authorized')
+	}
+
     const buildingsQueue = await BuildingsQueue.find({
 		planet: new mongoose.mongo.ObjectId(req.params.planetId),
 	}).sort({completed: 'asc'})
@@ -22,19 +35,22 @@ const getPlanetQueue = asyncHandler(async (req, res) => {
 		}
 	})); 
 
-    // if (!buildingQueue) {
-    //     res.status(404)
-    //     throw new Error('Planet buildings not found ' + req.params.planetId)
-    // }
+	const researchsQueue = await ResearchsQueue.find({
+		planet: new mongoose.mongo.ObjectId(req.params.planetId),
+	}).sort({completed: 'asc'})
 
-    // if (planet.user.toString() !== req.user.id) {
-    //     res.status(401)
-    //     throw new Error('Not Authorized')
-    // }
+	const researchQueue = await Promise.all(researchsQueue.map(async (queueItem) => {
+		let planetResearch = await PlanetResearch.findById(queueItem.research)
+		let research = await Research.findById(planetResearch.research)
+		return {
+			queueItem,
+			research,
+		}
+	})); 
 
     res.status(200).json({
 		buildings: buildingQueue,
-		research: [],
+		research: researchQueue,
 		fleet: [],
 	})
 })

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-//get user planets
+//get all planets
 const getAllPlanets = async(token) => {
     const config = {
         headers: {
@@ -26,7 +26,7 @@ const getUserPlanets = async(userId, token) => {
     return response.data
 }
 
-//get planets buildings
+//get planets development queue
 const getPlanetQueue = async(planetId, token) => {
     const config = {
         headers: {
@@ -40,6 +40,7 @@ const getPlanetQueue = async(planetId, token) => {
 }
 
 const planetService = {
+    getAllPlanets,
     getUserPlanets,
     getPlanetQueue,
 }

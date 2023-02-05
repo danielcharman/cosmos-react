@@ -56,6 +56,9 @@ export const planetSlice = createSlice({
             state.isError = false
             state.isSuccess = false
             state.message = ''
+            state.planets =  []
+            state.queue =  []
+            state.currentPlanet = null
         },
         setCurrentPlanet: (state, action) => {
             state.currentPlanet = action.payload

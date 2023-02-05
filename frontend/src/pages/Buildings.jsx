@@ -58,6 +58,7 @@ function Buildings() {
         }))
         dispatch(getUserPlanets())
         dispatch(getPlanetQueue(currentPlanet._id))
+        dispatch(getPlanetBuildings(currentPlanet._id)) 
         closeModal()
     }
 
@@ -71,16 +72,16 @@ function Buildings() {
         return (cost < resource) ? true : false
     }
 
-    const canAffordAll = () => {
-        if(!canAfford(oreCost, currentPlanet.ore)) return false
-        if(!canAfford(crystalCost, currentPlanet.crystal)) return false
-        if(!canAfford(gasCost, currentPlanet.gas)) return false
+    const canAffordAll = (oreCost, crystalCost, gasCost) => {
+        if(!canAfford(oreCost, currentPlanet.resources.ore.current)) return false
+        if(!canAfford(crystalCost, currentPlanet.resources.crystal.current)) return false
+        if(!canAfford(gasCost, currentPlanet.resources.gas.current)) return false
         return true
     }
 
     if (!currentPlanet) return <></>
 
-    let duration, oreCost, crystalCost, gasCost
+    let duration, production, oreCost, crystalCost, gasCost
 
     if(currentBuilding) {
         duration = getMultipliedValue(
@@ -88,6 +89,19 @@ function Buildings() {
             currentBuilding.building.durationMultipler,
             (currentBuilding.planetBuilding.level + 1)
         )
+        
+        production = {
+            current: getMultipliedValue(
+                        currentBuilding.building.production,
+                        currentBuilding.building.productionMultipler,
+                        (currentBuilding.planetBuilding.level)
+                    ),
+            next: getMultipliedValue(
+                currentBuilding.building.production,
+                currentBuilding.building.productionMultipler,
+                (currentBuilding.planetBuilding.level + 1)
+            ), 
+        }
 
         oreCost = getMultipliedValue(
             currentBuilding.building.ore,
@@ -114,15 +128,33 @@ function Buildings() {
 
             <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>
                 {buildings.map((building, index) => {
+                    var buildingOreCost = getMultipliedValue(
+                        building.building.ore,
+                        building.building.oreMultipler,
+                        (building.planetBuilding.level + 1)
+                    )
+            
+                    var buildingCrystalCost = getMultipliedValue(
+                        building.building.crystal,
+                        building.building.crystalMultipler,
+                        (building.planetBuilding.level + 1)
+                    )
+            
+                    var buildingGasCost = getMultipliedValue(
+                        building.building.gas,
+                        building.building.crystalMultipler,
+                        (building.planetBuilding.level + 1)
+                    )
+
                     return (
                         <div key={index} style={{width: '16.6666%'}}>
-                            <div className={'buildingTile ' + (isDisabled(building) && 'disabled')} title={building.building.name} onClick={() => {
+                            <div className={'buildingTile ' + (isDisabled(building) && 'disabled') + ' ' + (canAffordAll(buildingOreCost, buildingCrystalCost, buildingGasCost) ? 'buildingTile-success' : 'buildingTile-danger')} title={building.building.name} onClick={() => {
                                 if(isDisabled(building)) return
                                 setCurrentBuilding(building)
                                 openModal()
                             }}>
                                 <img src={`/assets/img/building/${building.building.name.replace(/ /g,"_")}.jpg`} alt={building.building.name} className='img' />
-                                <span className='badge badge-success'>
+                                <span className={'badge ' + (canAffordAll(buildingOreCost, buildingCrystalCost, buildingGasCost) ? 'badge-success' : 'badge-danger')}>
                                     {building.planetBuilding.level}
                                 </span>
                             </div>
@@ -147,47 +179,71 @@ function Buildings() {
                         </div>
                         <div className='modalBody'>
                             {currentBuilding.building.description}
-                            <table className='table' style={{marginTop: 30}}>
+                            <table className='table' style={{marginTop: 30, fontSize: 13}}>
                                 <tbody>
                                     <tr>
                                         <th>Level</th>
-                                        <td>{currentBuilding.planetBuilding.level} > <b>{currentBuilding.planetBuilding.level + 1}</b></td>
+                                        <td>
+                                            <span className='badge badge-normal'>             
+                                                {currentBuilding.planetBuilding.level}
+                                            </span> -><span className='badge badge-success'>  
+                                                {currentBuilding.planetBuilding.level + 1}
+                                            </span>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th style={{width: '35%'}}>
-                                            Duration 
+                                            Upgrade Duration 
                                         </th>
                                         <td style={{width: '65%'}}>
                                             {duration / 60} minutes
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>Resources</th>
+                                        <th style={{width: '35%'}}>
+                                            Production 
+                                        </th>
+                                        <td style={{width: '65%'}}>
+                                            <span className='badge badge-normal'>
+                                                {production.current}
+                                            </span> -><span className='badge badge-success'>
+                                                {production.next}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Resource Cost</th>
                                         <td>
-                                            <div>
-                                                Ore 
-                                                <span className={'badge ' + ((canAfford(oreCost, currentPlanet.ore)) ? 'badge-success' : 'badge-danger')} style={{marginLeft: 5}}>
-                                                    {oreCost}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                Crystal 
-                                                <span className={'badge ' + ((canAfford(crystalCost, currentPlanet.crystal)) ? 'badge-success' : 'badge-danger')} style={{marginLeft: 5}}>
-                                                    {crystalCost}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                Gas 
-                                                <span className={'badge ' + ((canAfford(gasCost, currentPlanet.gas)) ? 'badge-success' : 'badge-danger')} style={{marginLeft: 5}}>
-                                                    {gasCost}
-                                                </span>
-                                            </div>
+                                            {oreCost > 0 && (
+                                                <div>
+                                                    Ore 
+                                                    <span className={'badge ' + ((canAfford(oreCost, currentPlanet.resources.ore.current)) ? 'badge-success' : 'badge-danger')} style={{marginLeft: 5}}>
+                                                        {oreCost}
+                                                    </span>
+                                                </div>
+                                            )}
+                                            {crystalCost > 0 && (
+                                                <div>
+                                                    Crystal 
+                                                    <span className={'badge ' + ((canAfford(crystalCost, currentPlanet.resources.crystal.current)) ? 'badge-success' : 'badge-danger')} style={{marginLeft: 5}}>
+                                                        {crystalCost}
+                                                    </span>
+                                                </div>
+                                            )}
+                                            {gasCost > 0 && (
+                                                <div>
+                                                    Gas 
+                                                    <span className={'badge ' + ((canAfford(gasCost, currentPlanet.resources.gas.current)) ? 'badge-success' : 'badge-danger')} style={{marginLeft: 5}}>
+                                                        {gasCost}
+                                                    </span>
+                                                </div>
+                                            )}
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
 
-                            <button className={'btn ' + ((canAffordAll()) ? 'btn-success' : 'btn-danger') + ((!canAffordAll() || isDisabled(currentBuilding)) ? ' disabled' : '')} onClick={() => {
+                            <button className={'btn ' + ((canAffordAll(oreCost, crystalCost, gasCost)) ? 'btn-success' : 'btn-danger') + ((!canAffordAll(oreCost, crystalCost, gasCost) || isDisabled(currentBuilding)) ? ' disabled' : '')} onClick={() => {
                                 if(isDisabled(currentBuilding)) return
                                 onUpgrade(currentBuilding.planetBuilding._id, currentBuilding.planetBuilding.level + 1)
                             }}>

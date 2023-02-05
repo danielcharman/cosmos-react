@@ -21,7 +21,7 @@ function Overview() {
                 </div>
                 <div style={{width: '30%', textAlign: 'left'}}>
                     <h2>{currentPlanet.name}</h2>
-                    <table className='table' style={{width: '100%'}}>
+                    <table className='table' style={{width: '100%', fontSize: 14}}>
                         <tbody>
                             <tr>
                                 <th style={{width: '40%'}}>Capacity</th>

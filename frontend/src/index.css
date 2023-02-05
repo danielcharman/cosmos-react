@@ -20,9 +20,9 @@
 	padding: 0;
 	box-sizing: border-box;
 
-	/* -webkit-user-select: none; 
+	-webkit-user-select: none; 
 	-ms-user-select: none; 
-	user-select: none;  */
+	user-select: none; 
 }
 
 .link {
@@ -125,7 +125,7 @@ h3 {
 	display: none;
 	position: fixed;
 	z-index: 90;
-	top: 55px;
+	top: 50px;
 	left: 0;
 	bottom: 0;
 	width: 300px;
@@ -218,23 +218,8 @@ h3 {
 	display: inline-block;
 	color: white;
 	margin: 0 10px;
-}
-
-.headerResourcesItemLabel {
 	font-weight: 600;
 	font-size: 14px;
-}
-
-.headerResourcesItemValue {
-	font-size: 12px;
-	background-color: var(--light-green);
-	padding: 2px 10px;
-	border-radius: 10px;
-	margin-left: 5px;
-}
-
-.headerResourcesItemValue.low {
-	background-color: var(--light-red);
 }
 
 .headerPlanets {
@@ -394,8 +379,8 @@ h3 {
 
 .table th {
     background-color: #494e53;
-    font-weight: 500;
-	padding: 0.75rem;
+    font-weight: 600;
+	padding: 10px;
     vertical-align: middle;
     text-align: inherit;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -403,7 +388,7 @@ h3 {
 
 .table td {
     background-color: #343a40;
-	padding: 0.75rem;
+	padding: 10px;
     vertical-align: middle;
     text-align: inherit;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -420,6 +405,8 @@ h3 {
     border-radius: 5px;
     color: white;
 	margin-left: 5px;
+	padding: 5px 5px 3px;
+	line-height: 1;
 } 
 
 .badge.badge-success {
@@ -428,6 +415,15 @@ h3 {
 
 .badge.badge-danger {
 	background-color: var(--light-red);
+}
+
+.badge.badge-normal {
+	background-color: rgba(255,255,255,0.2);
+}
+
+.badge.badge-large {
+    font-size: 13px; 
+	font-weight: 600;
 }
 
 .modalContent {
@@ -448,7 +444,7 @@ h3 {
 .modalBody {
 	padding: 30px;
 	text-align: left;
-	font-size: 15px;
+	font-size: 14px;
 	max-height: 400px;
 	overflow: auto;
 }
@@ -495,6 +491,14 @@ h3 {
 
 .buildingTile.disabled {
     border: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.buildingTile.buildingTile-success {
+	border-color: var(--light-green);
+} 
+
+.buildingTile.buildingTile-danger {
+	border-color: var(--light-red);
 }
 
 .buildingTile img {

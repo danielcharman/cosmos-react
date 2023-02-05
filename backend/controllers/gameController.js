@@ -1,21 +1,30 @@
 const asyncHandler = require('express-async-handler')
 const mongoose = require('mongoose');
 
+const Planet = require('../models/planetModel')
+
 const Building = require('../models/buildingModel')
 const BuildingsQueue = require('../models/buildingsQueueModel')
-const Planet = require('../models/planetModel')
 const PlanetBuilding = require('../models/planetBuildingModel')
+
+const Research = require('../models/researchModel')
+const ResearchsQueue = require('../models/researchsQueueModel')
+const PlanetResearch = require('../models/planetResearchModel')
+
+const {
+    getPlanetResourceLimits
+} = require('../game')
 
 // @desc    Get buildings queue and process it
 // @access  Private
-const processBuildingQueue = asyncHandler(async (req, res) => {
+const processUpgradeQueue = asyncHandler(async (req, res) => {
     const buildingsQueue = await BuildingsQueue.find({
 		completed: {
 			$lt: new Date()
 		}
 	})
 
-	const processedQueue = await Promise.all(buildingsQueue.map(async (queueItem) => {
+	const processedBuildingsQueue = await Promise.all(buildingsQueue.map(async (queueItem) => {
 		//do stuff and then remove queue item
 		const updatedBuilding = await PlanetBuilding.findByIdAndUpdate(
 			queueItem.building,
@@ -30,6 +39,28 @@ const processBuildingQueue = asyncHandler(async (req, res) => {
 
 		return updatedBuilding
 	})); 
+
+	const researchsQueue = await ResearchsQueue.find({
+		completed: {
+			$lt: new Date()
+		}
+	})
+
+	const processedResearchsQueue = await Promise.all(researchsQueue.map(async (queueItem) => {
+		//do stuff and then remove queue item
+		const updatedResearch = await PlanetResearch.findByIdAndUpdate(
+			queueItem.research,
+			{
+				level: queueItem.level,
+				active: true,
+			},
+			{ new: true }
+		)
+
+		await queueItem.remove()
+
+		return updatedResearch
+	})); 
 })
 
 // @desc    Get planets and process resources
@@ -37,9 +68,9 @@ const processBuildingQueue = asyncHandler(async (req, res) => {
 const processPlanetResources = asyncHandler(async (req, res) => {
     const planets = await Planet.find()
 
-	const processedQueue = await Promise.all(planets.map(async (planet) => {	
+	const processedQueue = await Promise.all(planets.map(async (planet) => {
 		const gameOreMine = await Building.findById('63d7afdf48791a8ebd439f3b')
-		const gamCrystalMine = await Building.findById('63d7aff848791a8ebd439f3e')
+		const gameCrystalMine = await Building.findById('63d7aff848791a8ebd439f3e')
 		const gameGasMine = await Building.findById('63d7b01448791a8ebd439f41')
 
 		const planetOreMine = await PlanetBuilding.findOne({
@@ -57,19 +88,33 @@ const processPlanetResources = asyncHandler(async (req, res) => {
 			building: new mongoose.mongo.ObjectId('63d7b01448791a8ebd439f41')
 		})
 
+        const resourceLimits = await getPlanetResourceLimits(planet._id)
+	
+		//work out current building levels
 		const currentOreLevel = (planetOreMine) ? planetOreMine.level : 1
 		const currentCrystalLevel = (planetCrystalMine) ? planetCrystalMine.level : 1
 		const currentGasLevel = (planetGasMine) ? planetGasMine.level : 1
 
-		const newOre = (gameOreMine.production * ((gameOreMine.productionMultiplier ?? 1.5) * currentOreLevel))
-		const newCrystal = (gamCrystalMine.production * ((gamCrystalMine.productionMultiplier ?? 1.5) * currentCrystalLevel))
-		const newGas = (gameGasMine.production * ((gameGasMine.productionMultiplier ?? 1.5) * currentGasLevel))
+		//calculate resource amount based on building level
+		var newOre = (gameOreMine.production * ((gameOreMine.productionMultiplier ?? 1.5) * currentOreLevel))
+		var newCrystal = (gameCrystalMine.production * ((gameCrystalMine.productionMultiplier ?? 1.5) * currentCrystalLevel))
+		var newGas = (gameGasMine.production * ((gameGasMine.productionMultiplier ?? 1.5) * currentGasLevel))
+
+		//check if resources can fit in storage
+		newOre = (newOre > resourceLimits.ore) ? resourceLimits.ore : newOre
+		newCrystal = (newCrystal > resourceLimits.crystal) ? resourceLimits.crystal : newCrystal
+		newGas = (newGas > resourceLimits.gas) ? resourceLimits.gas : newGas
+
+		const getIntervalAmounts = (value) => {
+			//convert units / hour to units / 10 seconds
+			return value / ((60 * 60) / 10) 
+		}
 
 		planet.set({
-			ore: (planet.ore + newOre).toFixed(0), 
-			crystal: (planet.crystal + newCrystal).toFixed(0), 
-			gas: (planet.gas + newGas).toFixed(0), 
-		})		
+			ore: (planet.ore + getIntervalAmounts(newOre)).toFixed(5), 
+			crystal: (planet.crystal + getIntervalAmounts(newCrystal)).toFixed(5), 
+			gas: (planet.gas + getIntervalAmounts(newGas)).toFixed(5), 
+		})
 
 		const updatedPlanet = await planet.save();
 
@@ -78,6 +123,6 @@ const processPlanetResources = asyncHandler(async (req, res) => {
 })
 
 module.exports = {
-    processBuildingQueue,
+    processUpgradeQueue,
 	processPlanetResources
 }
