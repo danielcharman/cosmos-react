@@ -3,6 +3,7 @@ import authReducer from '../features/auth/authSlice';
 import planetReducer from '../features/planets/planetSlice';
 import buildingReducer from '../features/buildings/buildingSlice';
 import technologyReducer from '../features/technologies/technologySlice';
+import vehicleReducer from '../features/vehicles/vehicleSlice';
 
 export const store = configureStore({
 	reducer: {
@@ -10,5 +11,6 @@ export const store = configureStore({
 		planets: planetReducer,
 		buildings: buildingReducer,
 		technologies: technologyReducer,
+		vehicles: vehicleReducer,
 	},
 });

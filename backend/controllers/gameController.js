@@ -11,6 +11,10 @@ const Technology = require('../models/technologyModel')
 const TechnologiesQueue = require('../models/technologiesQueueModel')
 const PlanetTechnology = require('../models/planetTechnologyModel')
 
+const Vehicle = require('../models/vehicleModel')
+const VehiclesQueue = require('../models/vehiclesQueueModel')
+const PlanetVehicle = require('../models/planetVehicleModel')
+
 const {
     getPlanetResourceLimits
 } = require('../game')
@@ -60,6 +64,28 @@ const processUpgradeQueue = asyncHandler(async (req, res) => {
 		await queueItem.remove()
 
 		return updatedTechnology
+	})); 
+
+	const vehiclesQueue = await VehiclesQueue.find({
+		completed: {
+			$lt: new Date()
+		}
+	})
+
+	const processedVehiclesQueue = await Promise.all(vehiclesQueue.map(async (queueItem) => {
+		//do stuff and then remove queue item
+		const updatedVehicle = await PlanetVehicle.findByIdAndUpdate(
+			queueItem.vehicle,
+			{
+				quantity: queueItem.quantity,
+				active: true,
+			},
+			{ new: true }
+		)
+
+		await queueItem.remove()
+
+		return updatedVehicle
 	})); 
 })
 

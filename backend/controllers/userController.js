@@ -13,6 +13,9 @@ const PlanetBuilding = require('../models/planetBuildingModel')
 const Technology = require('../models/technologyModel')
 const PlanetTechnology = require('../models/planetTechnologyModel')
 
+const Vehicle = require('../models/vehicleModel')
+const PlanetVehicle = require('../models/planetVehicleModel')
+
 // @desc    Register a new user
 // @route   /api/users
 // @access  Public
@@ -83,6 +86,25 @@ const registerUser = asyncHandler(async (req, res) => {
                 planetTechnology = await PlanetTechnology.create({
                     planet: planet._id,
                     technology: technology._id,
+                    level: 1,
+                })
+            }
+    
+            return
+        })); 
+
+        const tempVehicles = await Vehicle.find()
+    
+        const vehicles = await Promise.all(tempVehicles.map(async (vehicle) => {
+            let planetVehicle = await PlanetVehicle.findOne({
+                planet: planet._id,
+                vehicle: vehicle._id
+            })
+    
+            if(!planetVehicle) {
+                planetVehicle = await PlanetVehicle.create({
+                    planet: planet._id,
+                    vehicle: vehicle._id,
                     level: 1,
                 })
             }
@@ -191,6 +213,25 @@ const linkUserPlanet = asyncHandler(async (req, res) => {
             planetTechnology = await PlanetTechnology.create({
                 planet: req.params.planetId,
                 technology: technology._id,
+                level: 1,
+            })
+        }
+
+        return
+    })); 
+
+    const tempVehicles = await Vehicle.find()
+
+    const vehicles = await Promise.all(tempVehicles.map(async (vehicle) => {
+        let planetVehicle = await PlanetVehicle.findOne({
+            planet: req.params.planetId,
+            vehicle: vehicle._id
+        })
+
+        if(!planetVehicle) {
+            planetVehicle = await PlanetVehicle.create({
+                planet: req.params.planetId,
+                vehicle: vehicle._id,
                 level: 1,
             })
         }

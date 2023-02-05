@@ -72,13 +72,13 @@ function HeaderMenu() {
                 <Link to='/technologies' onClick={onToggle}>
                     <FaFlask className='headerMenuItemIcon' />  
                     <span className='headerMenuItemLabel'>Technologies</span>
-                    <span className='badge badge-success'>{(queue.technology && queue.technology.length > 0) ? queue.technology.length : 0}</span>
+                    <span className='badge badge-success'>{(queue.technologies && queue.technologies.length > 0) ? queue.technologies.length : 0}</span>
                 </Link>
-                {(queue.technology && queue.technology.length > 0) && (
+                {(queue.technologies && queue.technologies.length > 0) && (
                 <ul className="headerMenuSubMenu">
-                    {queue.technology.map((queueItem) => (
+                    {queue.technologies.map((queueItem) => (
                         <li key={queueItem.queueItem._id}>
-                            {queueItem.building.name}
+                            {queueItem.technology.name}
                             <span className="badge badge-success">{queueItem.queueItem.level}</span>
                             <Countdown initialDate={queueItem.queueItem.completed} onComplete={onComplete} />
                         </li>
@@ -86,18 +86,18 @@ function HeaderMenu() {
                 </ul>
                 )}
             </li>
-            <li className={'headerMenuItem ' + ((isCurrentRoute('/fleet')) && 'active')}>
-                <Link to='/fleet' onClick={onToggle}>
+            <li className={'headerMenuItem ' + ((isCurrentRoute('/vehicles')) && 'active')}>
+                <Link to='/vehicles' onClick={onToggle}>
                     <FaPlane className='headerMenuItemIcon' />  
-                    <span className='headerMenuItemLabel'>Fleet</span>
-                    <span className='badge badge-success'>{(queue.fleet && queue.fleet.length > 0) ? queue.fleet.length : 0}</span>
+                    <span className='headerMenuItemLabel'>Vehicles</span>
+                    <span className='badge badge-success'>{(queue.vehicles && queue.vehicles.length > 0) ? queue.vehicles.length : 0}</span>
                 </Link>
-                {(queue.fleet && queue.fleet.length > 0) && (
+                {(queue.vehicles && queue.vehicles.length > 0) && (
                 <ul className="headerMenuSubMenu">
-                    {queue.fleet.map((queueItem) => (
+                    {queue.vehicles.map((queueItem) => (
                         <li key={queueItem.queueItem._id}>
-                            {queueItem.building.name}
-                            <span className="badge badge-success">{queueItem.queueItem.level}</span>
+                            {queueItem.vehicle.name}
+                            <span className="badge badge-success">{queueItem.queueItem.quantity}</span>
                             <Countdown initialDate={queueItem.queueItem.completed} onComplete={onComplete} />
                         </li>
                     ))}

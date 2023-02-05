@@ -9,7 +9,7 @@ import Header from './components/Header'
 import Overview from './pages/Overview'
 import Buildings from './pages/Buildings'
 import Technologies from './pages/Technologies'
-import Fleet from './pages/Fleet'
+import Vehicles from './pages/Vehicles'
 import { Link } from 'react-router-dom'
 
 function App() {
@@ -55,10 +55,10 @@ function App() {
 								}
 							/>
 							<Route
-								path='/fleet'
+								path='/vehicles'
 								element={
 									<PrivateRoute>
-										<Fleet />
+										<Vehicles />
 									</PrivateRoute>
 								}
 							/>

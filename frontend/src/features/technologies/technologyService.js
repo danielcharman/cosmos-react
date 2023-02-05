@@ -8,7 +8,7 @@ const getPlanetTechnologies = async(planetId, token) => {
         },
     }
 
-    const response = await axios.get('/api/planets/' + planetId + '/technology', config)
+    const response = await axios.get('/api/planets/' + planetId + '/technologies', config)
 
     return response.data
 }
@@ -20,7 +20,7 @@ const upgradePlanetTechnology = async (planetId, planetTechnologyId, level, toke
         },
     }
   
-    const response = await axios.put('/api/planets/' + planetId + '/technology/' + planetTechnologyId, {level: level}, config)
+    const response = await axios.put('/api/planets/' + planetId + '/technologies/' + planetTechnologyId, {level: level}, config)
   
     return response.data
 }

@@ -11,6 +11,10 @@ const Technology = require('../models/technologyModel')
 const TechnologiesQueue = require('../models/technologiesQueueModel')
 const PlanetTechnology = require('../models/planetTechnologyModel')
 
+const Vehicle = require('../models/vehicleModel')
+const VehiclesQueue = require('../models/vehiclesQueueModel')
+const PlanetVehicle = require('../models/planetVehicleModel')
+
 // @desc    Get planet queues
 // @route   GET /api/planets/:id/queue 
 // @access  Private
@@ -48,10 +52,23 @@ const getPlanetQueue = asyncHandler(async (req, res) => {
 		}
 	})); 
 
+	const vehiclesQueue = await VehiclesQueue.find({
+		planet: new mongoose.mongo.ObjectId(req.params.planetId),
+	}).sort({completed: 'asc'})
+
+	const vehicleQueue = await Promise.all(vehiclesQueue.map(async (queueItem) => {
+		let planetVehicle = await PlanetVehicle.findById(queueItem.vehicle)
+		let vehicle = await Vehicle.findById(planetVehicle.vehicle)
+		return {
+			queueItem,
+			vehicle,
+		}
+	})); 
+
     res.status(200).json({
 		buildings: buildingQueue,
-		technology: technologyQueue,
-		fleet: [],
+		technologies: technologyQueue,
+		vehicles: vehicleQueue,
 	})
 })
 
