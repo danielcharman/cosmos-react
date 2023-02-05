@@ -460,6 +460,15 @@ h3 {
 	cursor: pointer;
 }
 
+.modalQuantity {
+	display: inline-block;
+	width: 85px;
+	padding: 12px;
+	background-color: white;
+	margin-right: 5px; 
+	text-align: right;
+}
+
 .pageTitle {
 	font-size: 60px;
 	line-height: 1;

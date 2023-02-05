@@ -182,33 +182,19 @@ function Vehicles() {
                             <table className='table' style={{marginTop: 30, fontSize: 13}}>
                                 <tbody>
                                     <tr>
-                                        <th>Quantity</th>
+                                        <th>Current Quantity</th>
                                         <td>
                                             <span className='badge badge-normal'>             
                                                 {currentVehicle.planetVehicle.quantity}
-                                            </span> -><span className='badge badge-success'>  
-                                                {currentVehicle.planetVehicle.quantity + 1}
                                             </span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th style={{width: '35%'}}>
-                                            Upgrade Duration 
+                                            Production Duration 
                                         </th>
                                         <td style={{width: '65%'}}>
-                                            {duration / 60} minutes
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th style={{width: '35%'}}>
-                                            Production 
-                                        </th>
-                                        <td style={{width: '65%'}}>
-                                            <span className='badge badge-normal'>
-                                                {production.current}
-                                            </span> -><span className='badge badge-success'>
-                                                {production.next}
-                                            </span>
+                                            {duration / 60} minutes / unit
                                         </td>
                                     </tr>
                                     <tr>
@@ -243,11 +229,13 @@ function Vehicles() {
                                 </tbody>
                             </table>
 
+                            <input type='text' className='formControl modalQuantity' id='quantity' name='quantity' placeholder='Quantity' defaultValue='1' required />
+
                             <button className={'btn ' + ((canAffordAll(oreCost, crystalCost, gasCost)) ? 'btn-success' : 'btn-danger') + ((!canAffordAll(oreCost, crystalCost, gasCost) || isDisabled(currentVehicle)) ? ' disabled' : '')} onClick={() => {
                                 if(isDisabled(currentVehicle)) return
                                 onUpgrade(currentVehicle.planetVehicle._id, currentVehicle.planetVehicle.quantity + 1)
                             }}>
-                                Buy Vehicle
+                                Buy Vehicle(s)
                             </button>
 
                             <DebugContainer data={currentVehicle.planetVehicle._id}>

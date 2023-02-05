@@ -76,11 +76,14 @@ function HeaderMenu() {
                 </Link>
                 {(queue.technologies && queue.technologies.length > 0) && (
                 <ul className="headerMenuSubMenu">
-                    {queue.technologies.map((queueItem) => (
+                    {queue.technologies.map((queueItem, index) => (
                         <li key={queueItem.queueItem._id}>
                             {queueItem.technology.name}
                             <span className="badge badge-success">{queueItem.queueItem.level}</span>
-                            <Countdown initialDate={queueItem.queueItem.completed} onComplete={onComplete} />
+                            {(index === 0) 
+                                ? <Countdown initialDate={queueItem.queueItem.completed} onComplete={onComplete} />
+                                :  <small>In queue</small>
+                            }
                         </li>
                     ))}
                 </ul>
@@ -94,11 +97,14 @@ function HeaderMenu() {
                 </Link>
                 {(queue.vehicles && queue.vehicles.length > 0) && (
                 <ul className="headerMenuSubMenu">
-                    {queue.vehicles.map((queueItem) => (
+                    {queue.vehicles.map((queueItem, index) => (
                         <li key={queueItem.queueItem._id}>
                             {queueItem.vehicle.name}
                             <span className="badge badge-success">{queueItem.queueItem.quantity}</span>
-                            <Countdown initialDate={queueItem.queueItem.completed} onComplete={onComplete} />
+                            {(index === 0) 
+                                ? <Countdown initialDate={queueItem.queueItem.completed} onComplete={onComplete} />
+                                :  <small>In queue</small>
+                            }
                         </li>
                     ))}
                 </ul>
