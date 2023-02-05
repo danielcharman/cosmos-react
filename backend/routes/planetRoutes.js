@@ -1,6 +1,9 @@
 const express = require('express')
 const router = express.Router({mergeParams: true})
-// const {} = require('../controllers/planetController')
+
+const {
+    createTechnology,
+} = require('../controllers/technologyController')
 
 const {protect} = require('../middleware/authMiddleware')
 
@@ -8,12 +11,15 @@ const {protect} = require('../middleware/authMiddleware')
 const planetBuildingRouter = require('./planetBuildingRoutes')
 router.use('/:planetId/buildings', planetBuildingRouter)
 
-//reroute into research router
-const planetResearchRouter = require('./planetResearchRoutes')
-router.use('/:planetId/research', planetResearchRouter)
+//reroute into technology router
+const planetTechnologyRouter = require('./planetTechnologyRoutes')
+router.use('/:planetId/technology', planetTechnologyRouter)
 
 //reroute into queue router
 const queueRouter = require('./queueRoutes')
 router.use('/:planetId/queue', queueRouter)
+
+router.route('/technology')
+    .post(protect, createTechnology)
 
 module.exports = router

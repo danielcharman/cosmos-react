@@ -148,7 +148,7 @@ function Buildings() {
 
                     return (
                         <div key={index} style={{width: '16.6666%'}}>
-                            <div className={'buildingTile ' + (isDisabled(building) && 'disabled') + ' ' + (canAffordAll(buildingOreCost, buildingCrystalCost, buildingGasCost) ? 'buildingTile-success' : 'buildingTile-danger')} title={building.building.name} onClick={() => {
+                            <div className={'tileItem ' + (isDisabled(building) && 'disabled') + ' ' + (canAffordAll(buildingOreCost, buildingCrystalCost, buildingGasCost) ? 'tileItem-success' : 'tileItem-danger')} title={building.building.name} onClick={() => {
                                 if(isDisabled(building)) return
                                 setCurrentBuilding(building)
                                 openModal()

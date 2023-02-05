@@ -480,7 +480,7 @@ h3 {
 	letter-spacing: 10px;
 }
 
-.buildingTile {
+.tileItem {
     position: relative;
     margin: 15px;
     cursor: pointer;
@@ -489,35 +489,35 @@ h3 {
     border: 3px solid white;
 }
 
-.buildingTile.disabled {
+.tileItem.disabled {
     border: 3px solid rgba(255, 255, 255, 0.2);
 }
 
-.buildingTile.buildingTile-success {
+.tileItem.tileItem-success {
 	border-color: var(--light-green);
 } 
 
-.buildingTile.buildingTile-danger {
+.tileItem.tileItem-danger {
 	border-color: var(--light-red);
 }
 
-.buildingTile img {
+.tileItem img {
     width: 100%;
     height: auto;
     display: block;
     border-radius: 10px;
 }
 
-.buildingTile.disabled img {
+.tileItem.disabled img {
     opacity: 0.2;
 }
 
-.buildingTile .badge {
+.tileItem .badge {
     position: absolute;
     bottom: 5px;
     left: 5px;
 }
 
-.buildingTile.disabled .badge {
+.tileItem.disabled .badge {
     opacity: 0.2;
 }

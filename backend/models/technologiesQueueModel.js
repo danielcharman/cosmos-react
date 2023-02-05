@@ -1,15 +1,15 @@
 const mongoose = require('mongoose')
 
-const researchsQueueSchema = mongoose.Schema({
+const technologiesQueueSchema = mongoose.Schema({
     planet: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Planet',
     },
-    research: {
+    technology: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'PlanetResearch',
+        ref: 'PlanetTechnology',
     },
     completed: {
         type: Date,
@@ -24,4 +24,4 @@ const researchsQueueSchema = mongoose.Schema({
     timestamps: true,
 })
 
-module.exports = mongoose.model('ResearchsQueue', researchsQueueSchema)
+module.exports = mongoose.model('TechnologiesQueue', technologiesQueueSchema)

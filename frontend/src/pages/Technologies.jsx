@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { getUserPlanets, getPlanetQueue } from '../features/planets/planetSlice'
-import { getPlanetResearchs, upgradePlanetResearch } from '../features/researchs/researchSlice'
+import { getPlanetTechnologies, upgradePlanetTechnology } from '../features/technologies/technologySlice'
 import { FaTimes } from 'react-icons/fa'
 import Modal from 'react-modal'
 import DebugContainer from '../components/DebugContainer'
@@ -24,9 +24,9 @@ const customStyles = {
 
 Modal.setAppElement('#root')
 
-function Research() {
+function Technology() {
     const [modalIsOpen, setModalIsOpen] = useState(false)
-    const [currentResearch, setCurrentResearch] = useState(null)
+    const [currentTechnology, setCurrentTechnology] = useState(null)
 
     const dispatch = useDispatch()
 
@@ -37,11 +37,11 @@ function Research() {
 	} = useSelector(state => state.planets)
 
     const {
-		researchs, 
-	} = useSelector(state => state.researchs)
+		technologies, 
+	} = useSelector(state => state.technologies)
 
     useEffect(() => {
-        if(currentPlanet) dispatch(getPlanetResearchs(currentPlanet._id)) 
+        if(currentPlanet) dispatch(getPlanetTechnologies(currentPlanet._id)) 
     }, [modalIsOpen, currentPlanet, queue, planets])
 
     // Open/close modal
@@ -50,21 +50,21 @@ function Research() {
 
     const getMultipliedValue = (base, multiplier, level) => (base * (multiplier * level))
 
-    const onUpgrade = (planetResearchId, level) => {
-        dispatch(upgradePlanetResearch({
+    const onUpgrade = (planetTechnologyId, level) => {
+        dispatch(upgradePlanetTechnology({
             planetId: currentPlanet._id, 
-            planetResearchId: planetResearchId, 
+            planetTechnologyId: planetTechnologyId, 
             level: level
         }))
         dispatch(getUserPlanets())
         dispatch(getPlanetQueue(currentPlanet._id))
-        dispatch(getPlanetResearchs(currentPlanet._id)) 
+        dispatch(getPlanetTechnologies(currentPlanet._id)) 
         closeModal()
     }
 
-    const isDisabled = (research) => {
-        if(research.planetResearch.level === 0) return true
-        if(!research.planetResearch.active) return true
+    const isDisabled = (technology) => {
+        if(technology.planetTechnology.level === 0) return true
+        if(!technology.planetTechnology.active) return true
         return false
     }
 
@@ -83,79 +83,79 @@ function Research() {
 
     let duration, production, oreCost, crystalCost, gasCost
 
-    if(currentResearch) {
+    if(currentTechnology) {
         duration = getMultipliedValue(
-            currentResearch.research.duration,
-            currentResearch.research.durationMultipler,
-            (currentResearch.planetResearch.level + 1)
+            currentTechnology.technology.duration,
+            currentTechnology.technology.durationMultipler,
+            (currentTechnology.planetTechnology.level + 1)
         )
         
         production = {
             current: getMultipliedValue(
-                        currentResearch.research.production,
-                        currentResearch.research.productionMultipler,
-                        (currentResearch.planetResearch.level)
+                        currentTechnology.technology.production,
+                        currentTechnology.technology.productionMultipler,
+                        (currentTechnology.planetTechnology.level)
                     ),
             next: getMultipliedValue(
-                currentResearch.research.production,
-                currentResearch.research.productionMultipler,
-                (currentResearch.planetResearch.level + 1)
+                currentTechnology.technology.production,
+                currentTechnology.technology.productionMultipler,
+                (currentTechnology.planetTechnology.level + 1)
             ), 
         }
 
         oreCost = getMultipliedValue(
-            currentResearch.research.ore,
-            currentResearch.research.oreMultipler,
-            (currentResearch.planetResearch.level + 1)
+            currentTechnology.technology.ore,
+            currentTechnology.technology.oreMultipler,
+            (currentTechnology.planetTechnology.level + 1)
         )
 
         crystalCost = getMultipliedValue(
-            currentResearch.research.crystal,
-            currentResearch.research.crystalMultipler,
-            (currentResearch.planetResearch.level + 1)
+            currentTechnology.technology.crystal,
+            currentTechnology.technology.crystalMultipler,
+            (currentTechnology.planetTechnology.level + 1)
         )
 
         gasCost = getMultipliedValue(
-            currentResearch.research.gas,
-            currentResearch.research.crystalMultipler,
-            (currentResearch.planetResearch.level + 1)
+            currentTechnology.technology.gas,
+            currentTechnology.technology.crystalMultipler,
+            (currentTechnology.planetTechnology.level + 1)
         )
     }
 
     return (
         <>
-            <h1 className="pageTitle">Cosmos <small>Researchs</small></h1>
+            <h1 className="pageTitle">Cosmos <small>Technologies</small></h1>
 
             <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>
-                {researchs.map((research, index) => {
-                    var researchOreCost = getMultipliedValue(
-                        research.research.ore,
-                        research.research.oreMultipler,
-                        (research.planetResearch.level + 1)
+                {technologies.map((technology, index) => {
+                    var technologyOreCost = getMultipliedValue(
+                        technology.technology.ore,
+                        technology.technology.oreMultipler,
+                        (technology.planetTechnology.level + 1)
                     )
             
-                    var researchCrystalCost = getMultipliedValue(
-                        research.research.crystal,
-                        research.research.crystalMultipler,
-                        (research.planetResearch.level + 1)
+                    var technologyCrystalCost = getMultipliedValue(
+                        technology.technology.crystal,
+                        technology.technology.crystalMultipler,
+                        (technology.planetTechnology.level + 1)
                     )
             
-                    var researchGasCost = getMultipliedValue(
-                        research.research.gas,
-                        research.research.crystalMultipler,
-                        (research.planetResearch.level + 1)
+                    var technologyGasCost = getMultipliedValue(
+                        technology.technology.gas,
+                        technology.technology.crystalMultipler,
+                        (technology.planetTechnology.level + 1)
                     )
 
                     return (
                         <div key={index} style={{width: '16.6666%'}}>
-                            <div className={'researchTile ' + (isDisabled(research) && 'disabled') + ' ' + (canAffordAll(researchOreCost, researchCrystalCost, researchGasCost) ? 'researchTile-success' : 'researchTile-danger')} title={research.research.name} onClick={() => {
-                                if(isDisabled(research)) return
-                                setCurrentResearch(research)
+                            <div className={'tileItem ' + (isDisabled(technology) && 'disabled') + ' ' + (canAffordAll(technologyOreCost, technologyCrystalCost, technologyGasCost) ? 'tileItem-success' : 'tileItem-danger')} title={technology.technology.name} onClick={() => {
+                                if(isDisabled(technology)) return
+                                setCurrentTechnology(technology)
                                 openModal()
                             }}>
-                                <img src={`/assets/img/research/${research.research.name.replace(/ /g,"_")}.jpg`} alt={research.research.name} className='img' />
-                                <span className={'badge ' + (canAffordAll(researchOreCost, researchCrystalCost, researchGasCost) ? 'badge-success' : 'badge-danger')}>
-                                    {research.planetResearch.level}
+                                <img src={`/assets/img/technology/${technology.technology.name.replace(/ /g,"_")}.jpg`} alt={technology.technology.name} className='img' />
+                                <span className={'badge ' + (canAffordAll(technologyOreCost, technologyCrystalCost, technologyGasCost) ? 'badge-success' : 'badge-danger')}>
+                                    {technology.planetTechnology.level}
                                 </span>
                             </div>
                         </div>
@@ -163,7 +163,7 @@ function Research() {
                 })}
             </div>
 
-            {currentResearch && (
+            {currentTechnology && (
                 <Modal
                     isOpen={modalIsOpen}
                     onRequestClose={closeModal}
@@ -172,22 +172,22 @@ function Research() {
                 >
                     <div className="modalContent">
                         <div className='modalHeading'>
-                            <h1 className='modalHeadingText'>{currentResearch.research.name}</h1>
+                            <h1 className='modalHeadingText'>{currentTechnology.technology.name}</h1>
                             <button className='modalClose' onClick={closeModal}>
                                 <FaTimes />
                             </button>
                         </div>
                         <div className='modalBody'>
-                            {currentResearch.research.description}
+                            {currentTechnology.technology.description}
                             <table className='table' style={{marginTop: 30, fontSize: 13}}>
                                 <tbody>
                                     <tr>
                                         <th>Level</th>
                                         <td>
                                             <span className='badge badge-normal'>             
-                                                {currentResearch.planetResearch.level}
+                                                {currentTechnology.planetTechnology.level}
                                             </span> -><span className='badge badge-success'>  
-                                                {currentResearch.planetResearch.level + 1}
+                                                {currentTechnology.planetTechnology.level + 1}
                                             </span>
                                         </td>
                                     </tr>
@@ -243,21 +243,21 @@ function Research() {
                                 </tbody>
                             </table>
 
-                            <button className={'btn ' + ((canAffordAll(oreCost, crystalCost, gasCost)) ? 'btn-success' : 'btn-danger') + ((!canAffordAll(oreCost, crystalCost, gasCost) || isDisabled(currentResearch)) ? ' disabled' : '')} onClick={() => {
-                                if(isDisabled(currentResearch)) return
-                                onUpgrade(currentResearch.planetResearch._id, currentResearch.planetResearch.level + 1)
+                            <button className={'btn ' + ((canAffordAll(oreCost, crystalCost, gasCost)) ? 'btn-success' : 'btn-danger') + ((!canAffordAll(oreCost, crystalCost, gasCost) || isDisabled(currentTechnology)) ? ' disabled' : '')} onClick={() => {
+                                if(isDisabled(currentTechnology)) return
+                                onUpgrade(currentTechnology.planetTechnology._id, currentTechnology.planetTechnology.level + 1)
                             }}>
-                                Upgrade to level {currentResearch.planetResearch.level + 1}
+                                Upgrade to level {currentTechnology.planetTechnology.level + 1}
                             </button>
 
-                            <DebugContainer data={currentResearch.planetResearch._id}>
-                                <span>planetResearch._id:</span>
-                                {currentResearch.planetResearch._id}
+                            <DebugContainer data={currentTechnology.planetTechnology._id}>
+                                <span>planetTechnology._id:</span>
+                                {currentTechnology.planetTechnology._id}
                             </DebugContainer>
 
-                            <DebugContainer data={currentResearch.planetResearch.research}>
-                                <span>planetResearch.research:</span>
-                                {currentResearch.planetResearch.research}
+                            <DebugContainer data={currentTechnology.planetTechnology.technology}>
+                                <span>planetTechnology.technology:</span>
+                                {currentTechnology.planetTechnology.technology}
                             </DebugContainer> 
                         </div>
                     </div>
@@ -267,4 +267,4 @@ function Research() {
     )
 }
 
-export default Research
+export default Technology

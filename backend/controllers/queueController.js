@@ -7,9 +7,9 @@ const Building = require('../models/buildingModel')
 const BuildingsQueue = require('../models/buildingsQueueModel')
 const PlanetBuilding = require('../models/planetBuildingModel')
 
-const Research = require('../models/researchModel')
-const ResearchsQueue = require('../models/researchsQueueModel')
-const PlanetResearch = require('../models/planetResearchModel')
+const Technology = require('../models/technologyModel')
+const TechnologiesQueue = require('../models/technologiesQueueModel')
+const PlanetTechnology = require('../models/planetTechnologyModel')
 
 // @desc    Get planet queues
 // @route   GET /api/planets/:id/queue 
@@ -35,22 +35,22 @@ const getPlanetQueue = asyncHandler(async (req, res) => {
 		}
 	})); 
 
-	const researchsQueue = await ResearchsQueue.find({
+	const technologiesQueue = await TechnologiesQueue.find({
 		planet: new mongoose.mongo.ObjectId(req.params.planetId),
 	}).sort({completed: 'asc'})
 
-	const researchQueue = await Promise.all(researchsQueue.map(async (queueItem) => {
-		let planetResearch = await PlanetResearch.findById(queueItem.research)
-		let research = await Research.findById(planetResearch.research)
+	const technologyQueue = await Promise.all(technologiesQueue.map(async (queueItem) => {
+		let planetTechnology = await PlanetTechnology.findById(queueItem.technology)
+		let technology = await Technology.findById(planetTechnology.technology)
 		return {
 			queueItem,
-			research,
+			technology,
 		}
 	})); 
 
     res.status(200).json({
 		buildings: buildingQueue,
-		research: researchQueue,
+		technology: technologyQueue,
 		fleet: [],
 	})
 })

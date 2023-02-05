@@ -9,7 +9,7 @@ const buildingSchema = mongoose.Schema({
         type: String,
         required: [true, 'Please select a type'],
         enum: ['Resource','Storage','Production','Facility'],
-        default: 'new',
+        default: 'Resource',
     },
     description: {
         type: String,

@@ -7,9 +7,9 @@ const Building = require('../models/buildingModel')
 const BuildingsQueue = require('../models/buildingsQueueModel')
 const PlanetBuilding = require('../models/planetBuildingModel')
 
-const Research = require('../models/researchModel')
-const ResearchsQueue = require('../models/researchsQueueModel')
-const PlanetResearch = require('../models/planetResearchModel')
+const Technology = require('../models/technologyModel')
+const TechnologiesQueue = require('../models/technologiesQueueModel')
+const PlanetTechnology = require('../models/planetTechnologyModel')
 
 const {
     getPlanetResourceLimits
@@ -40,16 +40,16 @@ const processUpgradeQueue = asyncHandler(async (req, res) => {
 		return updatedBuilding
 	})); 
 
-	const researchsQueue = await ResearchsQueue.find({
+	const technologiesQueue = await TechnologiesQueue.find({
 		completed: {
 			$lt: new Date()
 		}
 	})
 
-	const processedResearchsQueue = await Promise.all(researchsQueue.map(async (queueItem) => {
+	const processedTechnologiesQueue = await Promise.all(technologiesQueue.map(async (queueItem) => {
 		//do stuff and then remove queue item
-		const updatedResearch = await PlanetResearch.findByIdAndUpdate(
-			queueItem.research,
+		const updatedTechnology = await PlanetTechnology.findByIdAndUpdate(
+			queueItem.technology,
 			{
 				level: queueItem.level,
 				active: true,
@@ -59,7 +59,7 @@ const processUpgradeQueue = asyncHandler(async (req, res) => {
 
 		await queueItem.remove()
 
-		return updatedResearch
+		return updatedTechnology
 	})); 
 })
 

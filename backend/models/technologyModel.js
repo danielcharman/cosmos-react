@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const researchSchema = mongoose.Schema({
+const technologySchema = mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Please enter a name'],
@@ -8,8 +8,8 @@ const researchSchema = mongoose.Schema({
     type: {
         type: String,
         required: [true, 'Please select a type'],
-        enum: ['Resource','Storage','Production','Facility'],
-        default: 'new',
+        enum: ['General','Vehicle','Weapon'],
+        default: 'General',
     },
     description: {
         type: String,
@@ -74,7 +74,7 @@ const researchSchema = mongoose.Schema({
     requiredBuildings: {
         type: Array,
     },
-    requiredResearch: {
+    requiredTechnology: {
         type: Array,
     },
 }, 
@@ -82,4 +82,4 @@ const researchSchema = mongoose.Schema({
     timestamps: true,
 })
 
-module.exports = mongoose.model('Research', researchSchema)
+module.exports = mongoose.model('Technology', technologySchema)

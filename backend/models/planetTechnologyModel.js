@@ -1,15 +1,15 @@
 const mongoose = require('mongoose')
 
-const planetResearchSchema = mongoose.Schema({
+const planetTechnologySchema = mongoose.Schema({
     planet: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Planet',
     },
-    research: {
+    technology: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'Research',
+        ref: 'Technology',
     },
     level: {
         type: Number,
@@ -26,4 +26,4 @@ const planetResearchSchema = mongoose.Schema({
     strictQuery: false,
 })
 
-module.exports = mongoose.model('planetResearchs', planetResearchSchema)
+module.exports = mongoose.model('planetTechnologies', planetTechnologySchema)

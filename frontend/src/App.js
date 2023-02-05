@@ -8,7 +8,7 @@ import Register from './pages/Register'
 import Header from './components/Header'
 import Overview from './pages/Overview'
 import Buildings from './pages/Buildings'
-import Research from './pages/Research'
+import Technologies from './pages/Technologies'
 import Fleet from './pages/Fleet'
 import { Link } from 'react-router-dom'
 
@@ -47,10 +47,10 @@ function App() {
 								}
 							/>
 							<Route
-								path='/research'
+								path='/technologies'
 								element={
 									<PrivateRoute>
-										<Research />
+										<Technologies />
 									</PrivateRoute>
 								}
 							/>

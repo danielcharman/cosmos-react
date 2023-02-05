@@ -68,15 +68,15 @@ function HeaderMenu() {
                 </ul>
                 )}
             </li>
-            <li className={'headerMenuItem ' + ((isCurrentRoute('/research')) && 'active')}>
-                <Link to='/research' onClick={onToggle}>
+            <li className={'headerMenuItem ' + ((isCurrentRoute('/technology')) && 'active')}>
+                <Link to='/technologies' onClick={onToggle}>
                     <FaFlask className='headerMenuItemIcon' />  
-                    <span className='headerMenuItemLabel'>Research</span>
-                    <span className='badge badge-success'>{(queue.research && queue.research.length > 0) ? queue.research.length : 0}</span>
+                    <span className='headerMenuItemLabel'>Technologies</span>
+                    <span className='badge badge-success'>{(queue.technology && queue.technology.length > 0) ? queue.technology.length : 0}</span>
                 </Link>
-                {(queue.research && queue.research.length > 0) && (
+                {(queue.technology && queue.technology.length > 0) && (
                 <ul className="headerMenuSubMenu">
-                    {queue.research.map((queueItem) => (
+                    {queue.technology.map((queueItem) => (
                         <li key={queueItem.queueItem._id}>
                             {queueItem.building.name}
                             <span className="badge badge-success">{queueItem.queueItem.level}</span>

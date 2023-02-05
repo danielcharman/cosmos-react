@@ -10,8 +10,8 @@ const Planet = require('../models/planetModel')
 const Building = require('../models/buildingModel')
 const PlanetBuilding = require('../models/planetBuildingModel')
 
-const Research = require('../models/researchModel')
-const PlanetResearch = require('../models/planetResearchModel')
+const Technology = require('../models/technologyModel')
+const PlanetTechnology = require('../models/planetTechnologyModel')
 
 // @desc    Register a new user
 // @route   /api/users
@@ -69,20 +69,20 @@ const registerUser = asyncHandler(async (req, res) => {
             }
     
             return
-        })); 
+        }));  
 
-        const tempResearchs = await Research.find()
+        const tempTechnologies = await Technology.find()
 
-        const researchs = await Promise.all(tempResearchs.map(async (research) => {
-            let planetResearch = await PlanetResearch.findOne({
+        const technologies = await Promise.all(tempTechnologies.map(async (technology) => {
+            let planetTechnology = await PlanetTechnology.findOne({
                 planet: planet._id,
-                research: research._id
+                technology: technology._id
             })
     
-            if(!planetResearch) {
-                planetResearch = await PlanetResearch.create({
+            if(!planetTechnology) {
+                planetTechnology = await PlanetTechnology.create({
                     planet: planet._id,
-                    research: research._id,
+                    technology: technology._id,
                     level: 1,
                 })
             }
@@ -155,6 +155,54 @@ const superDeleteUser = asyncHandler(async (req, res) => {
     res.status(200).json(user)
 })
 
+// @desc    Register a new user
+// @route   /api/users
+// @access  Public
+const linkUserPlanet = asyncHandler(async (req, res) => {
+    
+    const tempBuildings = await Building.find()
+
+    const buildings = await Promise.all(tempBuildings.map(async (building) => {
+        let planetBuilding = await PlanetBuilding.findOne({
+            planet: req.params.planetId,
+            building: building._id
+        })
+
+        if(!planetBuilding) {
+            planetBuilding = await PlanetBuilding.create({
+                planet: req.params.planetId,
+                building: building._id,
+                level: 1,
+            })
+        }
+
+        return
+    }));  
+
+    const tempTechnologies = await Technology.find()
+
+    const technologies = await Promise.all(tempTechnologies.map(async (technology) => {
+        let planetTechnology = await PlanetTechnology.findOne({
+            planet: req.params.planetId,
+            technology: technology._id
+        })
+
+        if(!planetTechnology) {
+            planetTechnology = await PlanetTechnology.create({
+                planet: req.params.planetId,
+                technology: technology._id,
+                level: 1,
+            })
+        }
+
+        return
+    })); 
+
+    res.status(201).json()
+  
+})
+
+
 //generate jwtoken
 const generateToken = (id) => {
     return jwt.sign({id: id}, process.env.JWT_SECRET, {
@@ -166,4 +214,5 @@ module.exports = {
     registerUser,
     loginUser,
     superDeleteUser,
+    linkUserPlanet,
 }
