@@ -4,14 +4,14 @@ const router = express.Router({mergeParams: true})
 const {
     getPlanetBuildings,
     updatePlanetBuilding,
-} = require('../controllers/buildingController')
+} = require('../controllers/constructionObjectController')
 
 const {protect} = require('../middleware/authMiddleware')
 
 router.route('/')
     .get(protect, getPlanetBuildings)
     
-router.route('/:planetBuildingId')
+router.route('/:planetObjectId')
     .put(protect, updatePlanetBuilding)
 
 module.exports = router

@@ -2,8 +2,6 @@ const asyncHandler = require('express-async-handler')
 const mongoose = require('mongoose');
 
 const Planet = require('../models/planetModel')
-const Building = require('../models/buildingModel')
-const PlanetBuilding = require('../models/planetBuildingModel')
 
 const {
     getPlanetResourceLimits

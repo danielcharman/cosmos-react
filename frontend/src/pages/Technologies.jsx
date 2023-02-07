@@ -50,11 +50,11 @@ function Technologies() {
 
     const getMultipliedValue = (base, multiplier, level) => (base * (multiplier * level))
 
-    const onUpgrade = (planetTechnologyId, level) => {
+    const onUpgrade = (planetObjectId, level) => {
         dispatch(upgradePlanetTechnology({
             planetId: currentPlanet._id, 
-            planetTechnologyId: planetTechnologyId, 
-            level: level
+            planetObjectId: planetObjectId, 
+            amount: level
         }))
         dispatch(getUserPlanets())
         dispatch(getPlanetQueue(currentPlanet._id))
@@ -63,8 +63,8 @@ function Technologies() {
     }
 
     const isDisabled = (technology) => {
-        if(!technology.planetTechnology || technology.planetTechnology.level === 0) return true
-        if(!technology.planetTechnology.active) return true
+        if(!technology.planetObject || technology.planetObject.amount === 0) return true
+        if(!technology.planetObject.active) return true
         return false
     }
 
@@ -83,42 +83,42 @@ function Technologies() {
 
     let duration, production, oreCost, crystalCost, gasCost
 
-    if(currentTechnology && currentTechnology.planetTechnology) {
+    if(currentTechnology && currentTechnology.planetObject) {
         duration = getMultipliedValue(
-            currentTechnology.technology.duration,
-            currentTechnology.technology.durationMultipler,
-            (currentTechnology.planetTechnology.level + 1)
+            currentTechnology.object.duration,
+            currentTechnology.object.durationMultipler,
+            (currentTechnology.planetObject.amount + 1)
         )
         
         production = {
             current: getMultipliedValue(
-                        currentTechnology.technology.production,
-                        currentTechnology.technology.productionMultipler,
-                        (currentTechnology.planetTechnology.level)
+                        currentTechnology.object.production,
+                        currentTechnology.object.productionMultipler,
+                        (currentTechnology.planetObject.amount)
                     ),
             next: getMultipliedValue(
-                currentTechnology.technology.production,
-                currentTechnology.technology.productionMultipler,
-                (currentTechnology.planetTechnology.level + 1)
+                currentTechnology.object.production,
+                currentTechnology.object.productionMultipler,
+                (currentTechnology.planetObject.amount + 1)
             ), 
         }
 
         oreCost = getMultipliedValue(
-            currentTechnology.technology.ore,
-            currentTechnology.technology.oreMultipler,
-            (currentTechnology.planetTechnology.level + 1)
+            currentTechnology.object.ore,
+            currentTechnology.object.oreMultipler,
+            (currentTechnology.planetObject.amount + 1)
         )
 
         crystalCost = getMultipliedValue(
-            currentTechnology.technology.crystal,
-            currentTechnology.technology.crystalMultipler,
-            (currentTechnology.planetTechnology.level + 1)
+            currentTechnology.object.crystal,
+            currentTechnology.object.crystalMultipler,
+            (currentTechnology.planetObject.amount + 1)
         )
 
         gasCost = getMultipliedValue(
-            currentTechnology.technology.gas,
-            currentTechnology.technology.crystalMultipler,
-            (currentTechnology.planetTechnology.level + 1)
+            currentTechnology.object.gas,
+            currentTechnology.object.crystalMultipler,
+            (currentTechnology.planetObject.amount + 1)
         )
     }
 
@@ -129,33 +129,33 @@ function Technologies() {
             <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>
                 {technologies.map((technology, index) => {
                     var technologyOreCost = getMultipliedValue(
-                        technology.technology.ore,
-                        technology.technology.oreMultipler,
-                        ((technology.planetTechnology ? technology.planetTechnology.level : 1) + 1)
+                        technology.object.ore,
+                        technology.object.oreMultipler,
+                        ((technology.planetObject ? technology.planetObject.amount : 1) + 1)
                     )
             
                     var technologyCrystalCost = getMultipliedValue(
-                        technology.technology.crystal,
-                        technology.technology.crystalMultipler,
-                        ((technology.planetTechnology ? technology.planetTechnology.level : 1) + 1)
+                        technology.object.crystal,
+                        technology.object.crystalMultipler,
+                        ((technology.planetObject ? technology.planetObject.amount : 1) + 1)
                     )
             
                     var technologyGasCost = getMultipliedValue(
-                        technology.technology.gas,
-                        technology.technology.crystalMultipler,
-                        ((technology.planetTechnology ? technology.planetTechnology.level : 1) + 1)
+                        technology.object.gas,
+                        technology.object.crystalMultipler,
+                        ((technology.planetObject ? technology.planetObject.amount : 1) + 1)
                     )
 
                     return (
                         <div key={index} style={{width: '16.6666%'}}>
-                            <div className={'tileItem ' + (isDisabled(technology) && 'disabled') + ' ' + (canAffordAll(technologyOreCost, technologyCrystalCost, technologyGasCost) ? 'tileItem-success' : 'tileItem-danger')} title={technology.technology.name} onClick={() => {
+                            <div className={'tileItem ' + (isDisabled(technology) && 'disabled') + ' ' + (canAffordAll(technologyOreCost, technologyCrystalCost, technologyGasCost) ? 'tileItem-success' : 'tileItem-danger')} title={technology.object.name} onClick={() => {
                                 if(isDisabled(technology)) return
                                 setCurrentTechnology(technology)
                                 openModal()
                             }}>
-                                <img src={`/assets/img/technology/${technology.technology.name.replace(/ /g,"_")}.jpg`} alt={technology.technology.name} className='img' />
+                                <img src={`/assets/img/technology/${technology.object.name.replace(/ /g,"_")}.jpg`} alt={technology.object.name} className='img' />
                                 <span className={'badge ' + (canAffordAll(technologyOreCost, technologyCrystalCost, technologyGasCost) ? 'badge-success' : 'badge-danger')}>
-                                    {(technology.planetTechnology) ? technology.planetTechnology.level : 1}
+                                    {(technology.planetObject) ? technology.planetObject.amount : 1}
                                 </span>
                             </div>
                         </div>
@@ -172,22 +172,22 @@ function Technologies() {
                 >
                     <div className="modalContent">
                         <div className='modalHeading'>
-                            <h1 className='modalHeadingText'>{currentTechnology.technology.name}</h1>
+                            <h1 className='modalHeadingText'>{currentTechnology.object.name}</h1>
                             <button className='modalClose' onClick={closeModal}>
                                 <FaTimes />
                             </button>
                         </div>
                         <div className='modalBody'>
-                            {currentTechnology.technology.description}
+                            {currentTechnology.object.description}
                             <table className='table' style={{marginTop: 30, fontSize: 13}}>
                                 <tbody>
                                     <tr>
                                         <th>Level</th>
                                         <td>
                                             <span className='badge badge-normal'>             
-                                                {currentTechnology.planetTechnology.level}
+                                                {currentTechnology.planetObject.amount}
                                             </span> -><span className='badge badge-success'>  
-                                                {currentTechnology.planetTechnology.level + 1}
+                                                {currentTechnology.planetObject.amount + 1}
                                             </span>
                                         </td>
                                     </tr>
@@ -245,21 +245,21 @@ function Technologies() {
 
                             <button className={'btn ' + ((canAffordAll(oreCost, crystalCost, gasCost)) ? 'btn-success' : 'btn-danger') + ((!canAffordAll(oreCost, crystalCost, gasCost) || isDisabled(currentTechnology)) ? ' disabled' : '')} onClick={() => {
                                 if(isDisabled(currentTechnology)) return
-                                onUpgrade(currentTechnology.planetTechnology._id, currentTechnology.planetTechnology.level + 1)
+                                onUpgrade(currentTechnology.planetObject._id, currentTechnology.planetObject.amount + 1)
                             }}>
-                                Upgrade to level {currentTechnology.planetTechnology.level + 1}
+                                Upgrade to level {currentTechnology.planetObject.amount + 1}
                             </button>
 
                             {(process.env.REACT_APP_DEBUG_MODE === 'true') && (
                                 <>
-                                    <DebugContainer data={currentTechnology.planetTechnology._id}>
-                                        <span>planetTechnology._id:</span>
-                                        {currentTechnology.planetTechnology._id}
+                                    <DebugContainer data={currentTechnology.planetObject._id}>
+                                        <span>planetObject._id:</span>
+                                        {currentTechnology.planetObject._id}
                                     </DebugContainer>
 
-                                    <DebugContainer data={currentTechnology.planetTechnology.technology}>
-                                        <span>planetTechnology.technology:</span>
-                                        {currentTechnology.planetTechnology.technology}
+                                    <DebugContainer data={currentTechnology.planetObject.object}>
+                                        <span>planetObject.object:</span>
+                                        {currentTechnology.planetObject.object}
                                     </DebugContainer>  
                                 </>
                             )}   

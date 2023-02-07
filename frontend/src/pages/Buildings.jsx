@@ -50,11 +50,11 @@ function Buildings() {
 
     const getMultipliedValue = (base, multiplier, level) => (base * (multiplier * level))
 
-    const onUpgrade = (planetBuildingId, level) => {
+    const onUpgrade = (planetObjectId, level) => {
         dispatch(upgradePlanetBuilding({
             planetId: currentPlanet._id, 
-            planetBuildingId: planetBuildingId, 
-            level: level
+            planetObjectId: planetObjectId, 
+            amount: level
         }))
         dispatch(getUserPlanets())
         dispatch(getPlanetQueue(currentPlanet._id))
@@ -63,8 +63,8 @@ function Buildings() {
     }
 
     const isDisabled = (building) => {
-        if(building.planetBuilding.level === 0) return true
-        if(!building.planetBuilding.active) return true
+        if(!building.planetObject || building.planetObject.level === 0) return true
+        if(!building.planetObject.active) return true
         return false
     }
 
@@ -85,40 +85,40 @@ function Buildings() {
 
     if(currentBuilding) {
         duration = getMultipliedValue(
-            currentBuilding.building.duration,
-            currentBuilding.building.durationMultipler,
-            (currentBuilding.planetBuilding.level + 1)
+            currentBuilding.object.duration,
+            currentBuilding.object.durationMultipler,
+            (currentBuilding.planetObject.amount + 1)
         )
         
         production = {
             current: getMultipliedValue(
-                        currentBuilding.building.production,
-                        currentBuilding.building.productionMultipler,
-                        (currentBuilding.planetBuilding.level)
+                        currentBuilding.object.production,
+                        currentBuilding.object.productionMultipler,
+                        (currentBuilding.planetObject.amount)
                     ),
             next: getMultipliedValue(
-                currentBuilding.building.production,
-                currentBuilding.building.productionMultipler,
-                (currentBuilding.planetBuilding.level + 1)
+                currentBuilding.object.production,
+                currentBuilding.object.productionMultipler,
+                (currentBuilding.planetObject.amount + 1)
             ), 
         }
 
         oreCost = getMultipliedValue(
-            currentBuilding.building.ore,
-            currentBuilding.building.oreMultipler,
-            (currentBuilding.planetBuilding.level + 1)
+            currentBuilding.object.ore,
+            currentBuilding.object.oreMultipler,
+            (currentBuilding.planetObject.amount + 1)
         )
 
         crystalCost = getMultipliedValue(
-            currentBuilding.building.crystal,
-            currentBuilding.building.crystalMultipler,
-            (currentBuilding.planetBuilding.level + 1)
+            currentBuilding.object.crystal,
+            currentBuilding.object.crystalMultipler,
+            (currentBuilding.planetObject.amount + 1)
         )
 
         gasCost = getMultipliedValue(
-            currentBuilding.building.gas,
-            currentBuilding.building.crystalMultipler,
-            (currentBuilding.planetBuilding.level + 1)
+            currentBuilding.object.gas,
+            currentBuilding.object.crystalMultipler,
+            (currentBuilding.planetObject.amount + 1)
         )
     }
 
@@ -129,33 +129,33 @@ function Buildings() {
             <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>
                 {buildings.map((building, index) => {
                     var buildingOreCost = getMultipliedValue(
-                        building.building.ore,
-                        building.building.oreMultipler,
-                        (building.planetBuilding.level + 1)
+                        building.object.ore,
+                        building.object.oreMultipler,
+                        ((building.planetObject ? building.planetObject.amount : 1) + 1)
                     )
             
                     var buildingCrystalCost = getMultipliedValue(
-                        building.building.crystal,
-                        building.building.crystalMultipler,
-                        (building.planetBuilding.level + 1)
+                        building.object.crystal,
+                        building.object.crystalMultipler,
+                        ((building.planetObject ? building.planetObject.amount : 1) + 1)
                     )
             
                     var buildingGasCost = getMultipliedValue(
-                        building.building.gas,
-                        building.building.crystalMultipler,
-                        (building.planetBuilding.level + 1)
+                        building.object.gas,
+                        building.object.crystalMultipler,
+                        ((building.planetObject ? building.planetObject.amount : 1) + 1)
                     )
 
                     return (
                         <div key={index} style={{width: '16.6666%'}}>
-                            <div className={'tileItem ' + (isDisabled(building) && 'disabled') + ' ' + (canAffordAll(buildingOreCost, buildingCrystalCost, buildingGasCost) ? 'tileItem-success' : 'tileItem-danger')} title={building.building.name} onClick={() => {
+                            <div className={'tileItem ' + (isDisabled(building) && 'disabled') + ' ' + (canAffordAll(buildingOreCost, buildingCrystalCost, buildingGasCost) ? 'tileItem-success' : 'tileItem-danger')} title={building.object.name} onClick={() => {
                                 if(isDisabled(building)) return
                                 setCurrentBuilding(building)
                                 openModal()
                             }}>
-                                <img src={`/assets/img/building/${building.building.name.replace(/ /g,"_")}.jpg`} alt={building.building.name} className='img' />
+                                <img src={`/assets/img/building/${building.object.name.replace(/ /g,"_")}.jpg`} alt={building.object.name} className='img' />
                                 <span className={'badge ' + (canAffordAll(buildingOreCost, buildingCrystalCost, buildingGasCost) ? 'badge-success' : 'badge-danger')}>
-                                    {building.planetBuilding.level}
+                                    {(building.planetObject) ? building.planetObject.amount : 1}
                                 </span>
                             </div>
                         </div>
@@ -172,22 +172,22 @@ function Buildings() {
                 >
                     <div className="modalContent">
                         <div className='modalHeading'>
-                            <h1 className='modalHeadingText'>{currentBuilding.building.name}</h1>
+                            <h1 className='modalHeadingText'>{currentBuilding.object.name}</h1>
                             <button className='modalClose' onClick={closeModal}>
                                 <FaTimes />
                             </button>
                         </div>
                         <div className='modalBody'>
-                            {currentBuilding.building.description}
+                            {currentBuilding.object.description}
                             <table className='table' style={{marginTop: 30, fontSize: 13}}>
                                 <tbody>
                                     <tr>
                                         <th>Level</th>
                                         <td>
                                             <span className='badge badge-normal'>             
-                                                {currentBuilding.planetBuilding.level}
+                                                {currentBuilding.planetObject.amount}
                                             </span> -><span className='badge badge-success'>  
-                                                {currentBuilding.planetBuilding.level + 1}
+                                                {currentBuilding.planetObject.amount + 1}
                                             </span>
                                         </td>
                                     </tr>
@@ -245,21 +245,21 @@ function Buildings() {
 
                             <button className={'btn ' + ((canAffordAll(oreCost, crystalCost, gasCost)) ? 'btn-success' : 'btn-danger') + ((!canAffordAll(oreCost, crystalCost, gasCost) || isDisabled(currentBuilding)) ? ' disabled' : '')} onClick={() => {
                                 if(isDisabled(currentBuilding)) return
-                                onUpgrade(currentBuilding.planetBuilding._id, currentBuilding.planetBuilding.level + 1)
+                                onUpgrade(currentBuilding.planetObject._id, currentBuilding.planetObject.amount + 1)
                             }}>
-                                Upgrade to level {currentBuilding.planetBuilding.level + 1}
+                                Upgrade to level {currentBuilding.planetObject.amount + 1}
                             </button>
 
                             {(process.env.REACT_APP_DEBUG_MODE === 'true') && (
                                 <>
-                                    <DebugContainer data={currentBuilding.planetBuilding._id}>
-                                        <span>planetBuilding._id:</span>
-                                        {currentBuilding.planetBuilding._id}
+                                    <DebugContainer data={currentBuilding.planetObject._id}>
+                                        <span>planetObject._id:</span>
+                                        {currentBuilding.planetObject._id}
                                     </DebugContainer>
 
-                                    <DebugContainer data={currentBuilding.planetBuilding.building}>
-                                        <span>planetBuilding.building:</span>
-                                        {currentBuilding.planetBuilding.building}
+                                    <DebugContainer data={currentBuilding.planetObject.building}>
+                                        <span>planetObject.building:</span>
+                                        {currentBuilding.planetObject.building}
                                     </DebugContainer>  
                                 </>
                             )}   

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const vehicleSchema = mongoose.Schema({
+const constructionObjectSchema = mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Please enter a name'],
@@ -8,8 +8,14 @@ const vehicleSchema = mongoose.Schema({
     type: {
         type: String,
         required: [true, 'Please select a type'],
-        enum: ['Tactical','Specialist'],
-        default: 'General',
+        enum: ['Building','Technology','Vehicle'],
+        default: 'Building',
+    },
+    category: {
+        type: String,
+        required: [true, 'Please select a category'],
+        enum: ['Resource','Storage','Production','Facility','Tactical','Specialist','General','Vehicle','Weapon'],
+        default: 'Resource',
     },
     description: {
         type: String,
@@ -71,15 +77,13 @@ const vehicleSchema = mongoose.Schema({
     attributeMultipler: {
         type: Number,
     },
-    requiredBuildings: {
-        type: Array,
-    },
-    requiredVehicle: {
+    requiredObjects: {
         type: Array,
     },
 }, 
 {
     timestamps: true,
+    strictQuery: false,
 })
 
-module.exports = mongoose.model('Vehicle', vehicleSchema)
+module.exports = mongoose.model('constructionObject', constructionObjectSchema)

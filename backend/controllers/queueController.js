@@ -3,17 +3,9 @@ const mongoose = require('mongoose');
 
 const Planet = require('../models/planetModel')
 
-const Building = require('../models/buildingModel')
-const BuildingsQueue = require('../models/buildingsQueueModel')
-const PlanetBuilding = require('../models/planetBuildingModel')
-
-const Technology = require('../models/technologyModel')
-const TechnologiesQueue = require('../models/technologiesQueueModel')
-const PlanetTechnology = require('../models/planetTechnologyModel')
-
-const Vehicle = require('../models/vehicleModel')
-const VehiclesQueue = require('../models/vehiclesQueueModel')
-const PlanetVehicle = require('../models/planetVehicleModel')
+const ConstructionObject = require('../models/constructionObjectModel')
+const PlanetObject = require('../models/planetObjectModel')
+const ObjectQueue = require('../models/objectQueueModel')
 
 // @desc    Get planet queues
 // @route   GET /api/planets/:id/queue 
@@ -26,42 +18,51 @@ const getPlanetQueue = asyncHandler(async (req, res) => {
 	  throw new Error('Not Authorized')
 	}
 
-    const buildingsQueue = await BuildingsQueue.find({
+    const buildingsQueue = await ObjectQueue.find({
 		planet: new mongoose.mongo.ObjectId(req.params.planetId),
-	}).sort({completed: 'asc'})
+		type: 'Building',
+	}).sort({
+		completed: 'asc'
+	})
 
 	const buildingQueue = await Promise.all(buildingsQueue.map(async (queueItem) => {
-		let planetBuilding = await PlanetBuilding.findById(queueItem.building)
-		let building = await Building.findById(planetBuilding.building)
+		let planetObject = await PlanetObject.findById(queueItem.object)
+		let object = await ConstructionObject.findById(planetObject.object)
 		return {
 			queueItem,
-			building,
+			object,
 		}
 	})); 
 
-	const technologiesQueue = await TechnologiesQueue.find({
+	const technologiesQueue = await ObjectQueue.find({
 		planet: new mongoose.mongo.ObjectId(req.params.planetId),
-	}).sort({completed: 'asc'})
+		type: 'Technology',
+	}).sort({
+		completed: 'asc'
+	})
 
 	const technologyQueue = await Promise.all(technologiesQueue.map(async (queueItem) => {
-		let planetTechnology = await PlanetTechnology.findById(queueItem.technology)
-		let technology = await Technology.findById(planetTechnology.technology)
+		let planetObject = await PlanetObject.findById(queueItem.object)
+		let object = await ConstructionObject.findById(planetObject.object)
 		return {
 			queueItem,
-			technology,
+			object,
 		}
 	})); 
 
-	const vehiclesQueue = await VehiclesQueue.find({
+	const vehiclesQueue = await ObjectQueue.find({
 		planet: new mongoose.mongo.ObjectId(req.params.planetId),
-	}).sort({completed: 'asc'})
+		type: 'Vehicle',
+	}).sort({
+		completed: 'asc'
+	})
 
 	const vehicleQueue = await Promise.all(vehiclesQueue.map(async (queueItem) => {
-		let planetVehicle = await PlanetVehicle.findById(queueItem.vehicle)
-		let vehicle = await Vehicle.findById(planetVehicle.vehicle)
+		let planetObject = await PlanetObject.findById(queueItem.object)
+		let object = await ConstructionObject.findById(planetObject.object)
 		return {
 			queueItem,
-			vehicle,
+			object,
 		}
 	})); 
 

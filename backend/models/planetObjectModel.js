@@ -1,17 +1,17 @@
 const mongoose = require('mongoose')
 
-const planetVehicleSchema = mongoose.Schema({
+const planetObjectSchema = mongoose.Schema({
     planet: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Planet',
     },
-    vehicle: {
+    object: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'Vehicle',
+        ref: 'ConstructionObject',
     },
-    quantity: {
+    amount: {
         type: Number,
         required: true,
         default: 1,
@@ -26,4 +26,4 @@ const planetVehicleSchema = mongoose.Schema({
     strictQuery: false,
 })
 
-module.exports = mongoose.model('planetVehicles', planetVehicleSchema)
+module.exports = mongoose.model('planetObject', planetObjectSchema)

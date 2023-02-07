@@ -63,8 +63,8 @@ function HeaderMenu() {
                 <ul className="headerMenuSubMenu">
                     {queue.buildings.map((queueItem, index) => (
                         <li key={queueItem.queueItem._id}>
-                            {queueItem.building.name}
-                            <span className="badge badge-success">{queueItem.queueItem.level}</span>
+                            {queueItem.object.name}
+                            <span className="badge badge-success">{queueItem.queueItem.amount}</span>
                             {(index === 0) 
                                 ? <Countdown initialDate={queueItem.queueItem.completed} onComplete={onComplete} />
                                 :  <small>In queue</small>
@@ -86,8 +86,8 @@ function HeaderMenu() {
                 <ul className="headerMenuSubMenu">
                     {queue.technologies.map((queueItem, index) => (
                         <li key={queueItem.queueItem._id}>
-                            {queueItem.technology.name}
-                            <span className="badge badge-success">{queueItem.queueItem.level}</span>
+                            {queueItem.object.name}
+                            <span className="badge badge-success">{queueItem.queueItem.amount}</span>
                             {(index === 0) 
                                 ? <Countdown initialDate={queueItem.queueItem.completed} onComplete={onComplete} />
                                 :  <small>In queue</small>
@@ -109,8 +109,8 @@ function HeaderMenu() {
                 <ul className="headerMenuSubMenu">
                     {queue.vehicles.map((queueItem, index) => (
                         <li key={queueItem.queueItem._id}>
-                            {queueItem.vehicle.name}
-                            <span className="badge badge-success">{queueItem.queueItem.quantity}</span>
+                            {queueItem.object.name}
+                            <span className="badge badge-success">{queueItem.queueItem.amount}</span>
                             {(index === 0) 
                                 ? <Countdown initialDate={queueItem.queueItem.completed} onComplete={onComplete} />
                                 :  <small>In queue</small>

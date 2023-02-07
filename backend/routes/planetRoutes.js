@@ -3,11 +3,8 @@ const router = express.Router({mergeParams: true})
 
 const {
     createTechnology,
-} = require('../controllers/technologyController')
-
-const {
     createVehicle,
-} = require('../controllers/vehicleController')
+} = require('../controllers/constructionObjectController')
 
 const {protect} = require('../middleware/authMiddleware')
 

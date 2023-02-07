@@ -74,8 +74,7 @@ function Vehicles() {
     }
 
     const isDisabled = (vehicle) => {
-        if(!vehicle.planetVehicle || vehicle.planetVehicle.quantity === 0) return true
-        if(!vehicle.planetVehicle.active) return true
+        if(!vehicle.planetObject || !vehicle.planetObject.active) return true
         return false
     }
 
@@ -94,24 +93,24 @@ function Vehicles() {
 
     let duration, oreCost, crystalCost, gasCost
 
-    if(currentVehicle && currentVehicle.planetVehicle) {
+    if(currentVehicle && currentVehicle.planetObject) {
         duration = getMultipliedValue(
-            currentVehicle.vehicle.duration,
+            currentVehicle.object.duration,
             vehicleBuildQuantity
         )
 
         oreCost = getMultipliedValue(
-            currentVehicle.vehicle.ore,
+            currentVehicle.object.ore,
             vehicleBuildQuantity
         )
 
         crystalCost = getMultipliedValue(
-            currentVehicle.vehicle.crystal,
+            currentVehicle.object.crystal,
             vehicleBuildQuantity
         )
 
         gasCost = getMultipliedValue(
-            currentVehicle.vehicle.gas,
+            currentVehicle.object.gas,
             vehicleBuildQuantity
         )
     }
@@ -123,30 +122,30 @@ function Vehicles() {
             <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>
                 {vehicles.map((vehicle, index) => {
                     var vehicleOreCost = getMultipliedValue(
-                        vehicle.vehicle.ore,
+                        vehicle.object.ore,
                         vehicleBuildQuantity
                     )
             
                     var vehicleCrystalCost = getMultipliedValue(
-                        vehicle.vehicle.crystal,
+                        vehicle.object.crystal,
                         vehicleBuildQuantity
                     )
             
                     var vehicleGasCost = getMultipliedValue(
-                        vehicle.vehicle.gas,
+                        vehicle.object.gas,
                         vehicleBuildQuantity
                     )
 
                     return (
                         <div key={index} style={{width: '16.6666%'}}>
-                            <div className={'tileItem ' + (isDisabled(vehicle) && 'disabled')} title={vehicle.vehicle.name} onClick={() => {
+                            <div className={'tileItem ' + (isDisabled(vehicle) && 'disabled')} title={vehicle.object.name} onClick={() => {
                                 if(isDisabled(vehicle)) return
                                 setCurrentVehicle(vehicle)
                                 openModal()
                             }}>
-                                <img src={`/assets/img/vehicle/${vehicle.vehicle.name.replace(/ /g,"_")}.jpg`} alt={vehicle.vehicle.name} className='img' />
+                                <img src={`/assets/img/vehicle/${vehicle.object.name.replace(/ /g,"_")}.jpg`} alt={vehicle.object.name} className='img' />
                                 <span className='badge badge-normal'>
-                                    {(vehicle.planetVehicle) ? vehicle.planetVehicle.quantity : 1}
+                                    {(vehicle.planetObject) ? vehicle.planetObject.amount : 0}
                                 </span>
                             </div>
                         </div>
@@ -163,20 +162,20 @@ function Vehicles() {
                 >
                     <div className="modalContent">
                         <div className='modalHeading'>
-                            <h1 className='modalHeadingText'>{currentVehicle.vehicle.name}</h1>
+                            <h1 className='modalHeadingText'>{currentVehicle.object.name}</h1>
                             <button className='modalClose' onClick={closeModal}>
                                 <FaTimes />
                             </button>
                         </div>
                         <div className='modalBody'>
-                            {currentVehicle.vehicle.description}
+                            {currentVehicle.object.description}
                             <table className='table' style={{marginTop: 30, fontSize: 13}}>
                                 <tbody>
                                     <tr>
                                         <th>Current Quantity</th>
                                         <td>
                                             <span className='badge badge-normal'>             
-                                                {currentVehicle.planetVehicle.quantity}
+                                                {currentVehicle.planetObject.amount}
                                             </span>
                                         </td>
                                     </tr>
@@ -185,7 +184,7 @@ function Vehicles() {
                                             Production Duration 
                                         </th>
                                         <td style={{width: '65%'}}>
-                                            {duration / 60} minute{(duration / 60 > 1) && 's'} <span className='badge badge-normal'>{currentVehicle.vehicle.duration / 60} minute{(currentVehicle.vehicle.duration / 60 > 1) && 's'} / unit</span>
+                                            {duration / 60} minute{(duration / 60 > 1) && 's'} <span className='badge badge-normal'>{currentVehicle.object.duration / 60} minute{(currentVehicle.object.duration / 60 > 1) && 's'} / unit</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -224,21 +223,21 @@ function Vehicles() {
 
                             <button className={'btn ' + ((canAffordAll(oreCost, crystalCost, gasCost)) ? 'btn-success' : 'btn-danger') + ((!canAffordAll(oreCost, crystalCost, gasCost) || isDisabled(currentVehicle)) ? ' disabled' : '')} onClick={() => {
                                 if(isDisabled(currentVehicle)) return
-                                onUpgrade(currentVehicle.planetVehicle._id)
+                                onUpgrade(currentVehicle.planetObject._id)
                             }}>
                                 Buy Vehicle{(vehicleBuildQuantity > 1) && 's'}
                             </button>
 
                             {(process.env.REACT_APP_DEBUG_MODE === 'true') && (
                                 <>
-                                    <DebugContainer data={currentVehicle.planetVehicle._id}>
+                                    <DebugContainer data={currentVehicle.planetObject._id}>
                                         <span>planetVehicle._id:</span>
-                                        {currentVehicle.planetVehicle._id}
+                                        {currentVehicle.planetObject._id}
                                     </DebugContainer>
 
-                                    <DebugContainer data={currentVehicle.planetVehicle.vehicle}>
+                                    <DebugContainer data={currentVehicle.planetObject.vehicle}>
                                         <span>planetVehicle.vehicle:</span>
-                                        {currentVehicle.planetVehicle.vehicle}
+                                        {currentVehicle.planetObject.vehicle}
                                     </DebugContainer> 
                                 </>
                             )}   

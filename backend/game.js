@@ -1,32 +1,35 @@
 const mongoose = require('mongoose');
 
-const Planet = require('./models/planetModel')
-const Building = require('./models/buildingModel')
-const PlanetBuilding = require('./models/planetBuildingModel')
+const Object = require('./models/constructionObjectModel')
+const PlanetObject = require('./models/planetObjectModel')
 
 const getPlanetResourceLimits = async (planetId) => {
-    const gameOreStorage = await Building.findById('63da2803991967a1341b75d4')
-    const gameCrystalStorage = await Building.findById('63da2842991967a1341b75d5')
-    const gameGasStorage = await Building.findById('63da2878991967a1341b75d6')
+    const oreStorageId = '63e0d55ef3d73c805e4d4aad'
+    const crystalStorageId = '63e0d55ef3d73c805e4d4aae'
+    const gasStorageId = '63e0d55ef3d73c805e4d4aaf'
 
-    const planetOreStorage = await PlanetBuilding.findOne({
+    const gameOreStorage = await Object.findById(oreStorageId)
+    const gameCrystalStorage = await Object.findById(crystalStorageId)
+    const gameGasStorage = await Object.findById(gasStorageId)
+
+    const planetOreStorage = await PlanetObject.findOne({
         planet: new mongoose.mongo.ObjectId(planetId),
-        building: new mongoose.mongo.ObjectId('63da2803991967a1341b75d4')
+        object: new mongoose.mongo.ObjectId(oreStorageId)
+    })
+ 
+    const planetCrystalStorage = await PlanetObject.findOne({
+        planet: new mongoose.mongo.ObjectId(planetId),
+        object: new mongoose.mongo.ObjectId(crystalStorageId)
     })
 
-    const planetCrystalStorage = await PlanetBuilding.findOne({
+    const planetGasStorage = await PlanetObject.findOne({
         planet: new mongoose.mongo.ObjectId(planetId),
-        building: new mongoose.mongo.ObjectId('63da2842991967a1341b75d5')
+        object: new mongoose.mongo.ObjectId(gasStorageId)
     })
 
-    const planetGasStorage = await PlanetBuilding.findOne({
-        planet: new mongoose.mongo.ObjectId(planetId),
-        building: new mongoose.mongo.ObjectId('63da2878991967a1341b75d6')
-    })
-
-    const currentOreStorageLevel = (planetOreStorage) ? planetOreStorage.level : 1
-    const currentCrystalStorageLevel = (planetCrystalStorage) ? planetCrystalStorage.level : 1
-    const currentGasStorageLevel = (planetGasStorage) ? planetGasStorage.level : 1
+    const currentOreStorageLevel = (planetOreStorage) ? planetOreStorage.amount : 1
+    const currentCrystalStorageLevel = (planetCrystalStorage) ? planetCrystalStorage.amount : 1
+    const currentGasStorageLevel = (planetGasStorage) ? planetGasStorage.amount : 1
 
     const oreCapacity = (gameOreStorage.production * ((gameOreStorage.productionMultiplier ?? 1.5) * currentOreStorageLevel))
     const crystalCapacity = (gameCrystalStorage.production * ((gameCrystalStorage.productionMultiplier ?? 1.5) * currentCrystalStorageLevel))
@@ -39,6 +42,30 @@ const getPlanetResourceLimits = async (planetId) => {
     }
 }
 
+const getObjectResourceCosts = async (objectId, amount) => {
+	//get planet and building details to calculate costs
+	const object = await ConstructionObject.findById(planetObject.object)
+
+	const {
+		duration, 
+		durationMultipler,
+		ore, 
+		oreMultipler,
+		crystal,
+		crystalMultipler,
+		gas,
+		gasMultipler
+	} = object
+
+    return {
+        duration: duration * (durationMultipler * amount),
+        ore: ore * (oreMultipler * amount),
+        crystal: crystal * (crystalMultipler * amount),
+        gas: gas * (gasMultipler * amount),
+    }
+}
+
 module.exports = {
     getPlanetResourceLimits,
+    getObjectResourceCosts
 }

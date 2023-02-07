@@ -7,14 +7,8 @@ const User = require('../models/userModel')
 
 const Planet = require('../models/planetModel')
 
-const Building = require('../models/buildingModel')
-const PlanetBuilding = require('../models/planetBuildingModel')
-
-const Technology = require('../models/technologyModel')
-const PlanetTechnology = require('../models/planetTechnologyModel')
-
-const Vehicle = require('../models/vehicleModel')
-const PlanetVehicle = require('../models/planetVehicleModel')
+const ConstructionObject = require('../models/constructionObjectModel')
+const PlanetObject = require('../models/planetObjectModel')
 
 // @desc    Register a new user
 // @route   /api/users
@@ -55,57 +49,63 @@ const registerUser = asyncHandler(async (req, res) => {
             user: user._id,
         })
 
-        const tempBuildings = await Building.find()
+        const tempBuildings = await ConstructionObject.find({
+            type: 'Building'
+        })
 
-        const buildings = await Promise.all(tempBuildings.map(async (building) => {
-            let planetBuilding = await PlanetBuilding.findOne({
+        const buildings = await Promise.all(tempBuildings.map(async (object) => {
+            let planetObject = await PlanetObject.findOne({
                 planet: planet._id,
-                building: building._id
+                object: object._id
             })
     
-            if(!planetBuilding) {
-                planetBuilding = await PlanetBuilding.create({
+            if(!planetObject) {
+                planetObject = await PlanetObject.create({
                     planet: planet._id,
-                    building: building._id,
-                    level: 1,
+                    object: object._id,
+                    amount: 1,
                 })
             }
     
             return
         }));  
 
-        const tempTechnologies = await Technology.find()
+        const tempTechnologies = await ConstructionObject.find({
+            type: 'Technology'
+        })
 
-        const technologies = await Promise.all(tempTechnologies.map(async (technology) => {
-            let planetTechnology = await PlanetTechnology.findOne({
+        const technologies = await Promise.all(tempTechnologies.map(async (object) => {
+            let planetObject = await PlanetObject.findOne({
                 planet: planet._id,
-                technology: technology._id
+                object: object._id
             })
     
-            if(!planetTechnology) {
-                planetTechnology = await PlanetTechnology.create({
+            if(!planetObject) {
+                planetObject = await PlanetObject.create({
                     planet: planet._id,
-                    technology: technology._id,
-                    level: 1,
+                    object: object._id,
+                    amount: 1,
                 })
             }
     
             return
         })); 
 
-        const tempVehicles = await Vehicle.find()
+        const tempVehicles = await ConstructionObject.find({
+            type: 'Vehicle'
+        })
     
-        const vehicles = await Promise.all(tempVehicles.map(async (vehicle) => {
-            let planetVehicle = await PlanetVehicle.findOne({
+        const vehicles = await Promise.all(tempVehicles.map(async (object) => {
+            let planetObject = await PlanetObject.findOne({
                 planet: planet._id,
-                vehicle: vehicle._id
+                object: object._id
             })
     
-            if(!planetVehicle) {
-                planetVehicle = await PlanetVehicle.create({
+            if(!planetObject) {
+                planetObject = await PlanetObject.create({
                     planet: planet._id,
-                    vehicle: vehicle._id,
-                    level: 1,
+                    object: object._id,
+                    amount: 1,
                 })
             }
     
@@ -154,17 +154,17 @@ const superDeleteUser = asyncHandler(async (req, res) => {
         user: new mongoose.mongo.ObjectId(req.params.userId)
     })
 
-    const deletedPlanetBuildings = await Promise.all(planets.map(async (planet) => {
-		let planetBuildings = await PlanetBuilding.deleteMany({
+    const deletedPlanetObjects = await Promise.all(planets.map(async (planet) => {
+		let planetObjects = await PlanetObject.deleteMany({
 			planet: new mongoose.mongo.ObjectId(planet._id),
 		})
 
         console.log('DDD deleteing planetBuildings for ' + planet._id)
 
-        return planetBuildings
+        return planetObjects
 	})); 
 
-    if(deletedPlanetBuildings) {
+    if(deletedPlanetObjects) {
         await Planet.deleteMany({
             user: new mongoose.mongo.ObjectId(req.params.userId)
         })
@@ -178,61 +178,67 @@ const superDeleteUser = asyncHandler(async (req, res) => {
 })
 
 // @desc    Register a new user
-// @route   /api/users
+// @route   /api/users/linkUserPlanet/:planetId
 // @access  Public
 const linkUserPlanet = asyncHandler(async (req, res) => {
     
-    const tempBuildings = await Building.find()
+    const tempBuildings = await ConstructionObject.find({
+		type: 'Building'
+	})
 
-    const buildings = await Promise.all(tempBuildings.map(async (building) => {
-        let planetBuilding = await PlanetBuilding.findOne({
+    const buildings = await Promise.all(tempBuildings.map(async (object) => {
+        let planetObject = await PlanetObject.findOne({
             planet: req.params.planetId,
-            building: building._id
+            object: object._id
         })
 
-        if(!planetBuilding) {
-            planetBuilding = await PlanetBuilding.create({
+        if(!planetObject) {
+            planetObject = await PlanetObject.create({
                 planet: req.params.planetId,
-                building: building._id,
-                level: 1,
+                object: object._id,
+                amount: 1,
             })
         }
 
         return
     }));  
 
-    const tempTechnologies = await Technology.find()
+    const tempTechnologies = await ConstructionObject.find({
+		type: 'Technology'
+	})
 
-    const technologies = await Promise.all(tempTechnologies.map(async (technology) => {
-        let planetTechnology = await PlanetTechnology.findOne({
+    const technologies = await Promise.all(tempTechnologies.map(async (object) => {
+        let planetObject = await PlanetObject.findOne({
             planet: req.params.planetId,
-            technology: technology._id
+            object: object._id
         })
 
-        if(!planetTechnology) {
-            planetTechnology = await PlanetTechnology.create({
+        if(!planetObject) {
+            planetObject = await PlanetObject.create({
                 planet: req.params.planetId,
-                technology: technology._id,
-                level: 1,
+                object: object._id,
+                amount: 1,
             })
         }
 
         return
     })); 
 
-    const tempVehicles = await Vehicle.find()
+    const tempVehicles = await Vehicle.find({
+		type: 'Vehicle'
+	})
 
-    const vehicles = await Promise.all(tempVehicles.map(async (vehicle) => {
-        let planetVehicle = await PlanetVehicle.findOne({
+    const vehicles = await Promise.all(tempVehicles.map(async (object) => {
+        let planetObject = await PlanetObject.findOne({
             planet: req.params.planetId,
-            vehicle: vehicle._id
+            object: object._id
         })
 
-        if(!planetVehicle) {
-            planetVehicle = await PlanetVehicle.create({
+        if(!planetObject) {
+            planetObject = await PlanetObject.create({
                 planet: req.params.planetId,
-                vehicle: vehicle._id,
-                level: 1,
+                object: object._id,
+                amount: 1,
             })
         }
 

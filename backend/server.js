@@ -31,7 +31,7 @@ app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
 const {
     processUpgradeQueue,
 	processPlanetResources
-} = require('./controllers/gameController')
+} = require('./controllers/gameController') 
 
 setInterval(() => {
     processUpgradeQueue()

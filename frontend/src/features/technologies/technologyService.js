@@ -13,14 +13,14 @@ const getPlanetTechnologies = async(planetId, token) => {
     return response.data
 }
 
-const upgradePlanetTechnology = async (planetId, planetTechnologyId, level, token) => {
+const upgradePlanetTechnology = async (planetId, planetObjectId, amount, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     }
   
-    const response = await axios.put('/api/planets/' + planetId + '/technologies/' + planetTechnologyId, {level: level}, config)
+    const response = await axios.put('/api/planets/' + planetId + '/technologies/' + planetObjectId, {amount: amount}, config)
   
     return response.data
 }
