@@ -4,7 +4,7 @@ const dotenv = require('dotenv').config()
 const {errorHandler} = require('./middleware/errorMiddleware')
 const connectDB = require('./config/db')
 var mongoose = require('mongoose');
-mongoose.set('debug', true);
+// mongoose.set('debug', true);
 
 const PORT = process.env.PORT || 5000
 

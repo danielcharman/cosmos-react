@@ -10,6 +10,8 @@ import Overview from './pages/Overview'
 import Buildings from './pages/Buildings'
 import Technologies from './pages/Technologies'
 import Vehicles from './pages/Vehicles'
+import Universe from './pages/Universe'
+import Missions from './pages/Missions'
 import { Link } from 'react-router-dom'
 
 function App() {
@@ -59,6 +61,22 @@ function App() {
 								element={
 									<PrivateRoute>
 										<Vehicles />
+									</PrivateRoute>
+								}
+							/>
+							<Route
+								path='/universe'
+								element={
+									<PrivateRoute>
+										<Universe />
+									</PrivateRoute>
+								}
+							/>
+							<Route
+								path='/missions'
+								element={
+									<PrivateRoute>
+										<Missions />
 									</PrivateRoute>
 								}
 							/>

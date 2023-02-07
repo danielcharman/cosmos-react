@@ -1,4 +1,4 @@
-import { FaBars, FaDesktop, FaBuilding, FaFlask, FaPlane, FaSignOutAlt } from 'react-icons/fa'
+import { FaBars, FaDesktop, FaBuilding, FaFlask, FaPlane, FaSignOutAlt, FaGlobe, FaMap } from 'react-icons/fa'
 import { Link, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { useState } from 'react'
@@ -120,6 +120,18 @@ function HeaderMenu() {
                 </ul>
                 )}
             </li>   
+            <li className='headerMenuItem'>
+                <Link to='/universe' onClick={onToggle}>
+                    <FaGlobe className='headerMenuItemIcon' />  
+                    <span className='headerMenuItemLabel'>Universe</span>
+                </Link>
+            </li>  
+            <li className='headerMenuItem'>
+                <Link to='/missions' onClick={onToggle}>
+                    <FaMap className='headerMenuItemIcon' />  
+                    <span className='headerMenuItemLabel'>Missions</span>
+                </Link>
+            </li> 
             <li className='headerMenuItem'>
                 <Link to='/logout' onClick={onToggle}>
                     <FaSignOutAlt className='headerMenuItemIcon' />  

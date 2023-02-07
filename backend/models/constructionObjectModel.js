@@ -26,9 +26,9 @@ const constructionObjectSchema = mongoose.Schema({
         required: [true, 'Please enter a duration'],
         default: 60,
     },
-    durationMultipler: {
+    durationMultiplier: {
         type: Number,
-        required: [true, 'Please enter a durationMultipler'],
+        required: [true, 'Please enter a durationMultiplier'],
         default: 1.5,
     },
     ore: {
@@ -36,9 +36,9 @@ const constructionObjectSchema = mongoose.Schema({
         required: [true, 'Please enter a base ore cost'],
         default: 1,
     },
-    oreMultipler: {
+    oreMultiplier: {
         type: Number,
-        required: [true, 'Please enter a oreMultipler'],
+        required: [true, 'Please enter a oreMultiplier'],
         default: 1.5,
     },
     crystal: {
@@ -46,9 +46,9 @@ const constructionObjectSchema = mongoose.Schema({
         required: [true, 'Please enter a base crystal cost'],
         default: 1,
     },
-    crystalMultipler: {
+    crystalMultiplier: {
         type: Number,
-        required: [true, 'Please enter a crystalMultipler'],
+        required: [true, 'Please enter a crystalMultiplier'],
         default: 1.5,
     },
     gas: {
@@ -56,9 +56,9 @@ const constructionObjectSchema = mongoose.Schema({
         required: [true, 'Please enter a base gas cost'],
         default: 1,
     },
-    gasMultipler: {
+    gasMultiplier: {
         type: Number,
-        required: [true, 'Please enter a gasMultipler'],
+        required: [true, 'Please enter a gasMultiplier'],
         default: 1.5,
     },
     production: {
@@ -66,15 +66,15 @@ const constructionObjectSchema = mongoose.Schema({
         required: [true, 'Please enter a base production value'],
         default: 1,
     },
-    productionMultipler: {
+    productionMultiplier: {
         type: Number,
-        required: [true, 'Please enter a productionMultipler'],
+        required: [true, 'Please enter a productionMultiplier'],
         default: 1.5,
     },
     attribute: {
         type: Number,
     },
-    attributeMultipler: {
+    attributeMultiplier: {
         type: Number,
     },
     requiredObjects: {

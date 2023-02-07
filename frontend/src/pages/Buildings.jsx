@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { getUserPlanets, getPlanetQueue } from '../features/planets/planetSlice'
 import { getPlanetBuildings, upgradePlanetBuilding } from '../features/buildings/buildingSlice'
-import { FaTimes } from 'react-icons/fa'
 import Modal from 'react-modal'
-import DebugContainer from '../components/DebugContainer'
+import ObjectTile from '../components/ObjectTile'
+import ObjectModal from '../components/ObjectModal'
 
 const customStyles = {
     content: {
@@ -42,19 +42,15 @@ function Buildings() {
 
     useEffect(() => {
         if(currentPlanet) dispatch(getPlanetBuildings(currentPlanet._id)) 
-    }, [modalIsOpen, currentPlanet, queue, planets])
+    }, [modalIsOpen, currentPlanet, queue, planets, dispatch])
 
-    // Open/close modal
     const openModal = () => setModalIsOpen(true)
     const closeModal = () => setModalIsOpen(false)
 
-    const getMultipliedValue = (base, multiplier, level) => (base * (multiplier * level))
-
-    const onUpgrade = (planetObjectId, level) => {
+    const onUpgrade = (planetObjectId) => {
         dispatch(upgradePlanetBuilding({
             planetId: currentPlanet._id, 
             planetObjectId: planetObjectId, 
-            amount: level
         }))
         dispatch(getUserPlanets())
         dispatch(getPlanetQueue(currentPlanet._id))
@@ -62,65 +58,7 @@ function Buildings() {
         closeModal()
     }
 
-    const isDisabled = (building) => {
-        if(!building.planetObject || building.planetObject.level === 0) return true
-        if(!building.planetObject.active) return true
-        return false
-    }
-
-    const canAfford = (cost, resource) => {
-        return (cost < resource) ? true : false
-    }
-
-    const canAffordAll = (oreCost, crystalCost, gasCost) => {
-        if(!canAfford(oreCost, currentPlanet.resources.ore.current)) return false
-        if(!canAfford(crystalCost, currentPlanet.resources.crystal.current)) return false
-        if(!canAfford(gasCost, currentPlanet.resources.gas.current)) return false
-        return true
-    }
-
     if (!currentPlanet) return <></>
-
-    let duration, production, oreCost, crystalCost, gasCost
-
-    if(currentBuilding) {
-        duration = getMultipliedValue(
-            currentBuilding.object.duration,
-            currentBuilding.object.durationMultipler,
-            (currentBuilding.planetObject.amount + 1)
-        )
-        
-        production = {
-            current: getMultipliedValue(
-                        currentBuilding.object.production,
-                        currentBuilding.object.productionMultipler,
-                        (currentBuilding.planetObject.amount)
-                    ),
-            next: getMultipliedValue(
-                currentBuilding.object.production,
-                currentBuilding.object.productionMultipler,
-                (currentBuilding.planetObject.amount + 1)
-            ), 
-        }
-
-        oreCost = getMultipliedValue(
-            currentBuilding.object.ore,
-            currentBuilding.object.oreMultipler,
-            (currentBuilding.planetObject.amount + 1)
-        )
-
-        crystalCost = getMultipliedValue(
-            currentBuilding.object.crystal,
-            currentBuilding.object.crystalMultipler,
-            (currentBuilding.planetObject.amount + 1)
-        )
-
-        gasCost = getMultipliedValue(
-            currentBuilding.object.gas,
-            currentBuilding.object.crystalMultipler,
-            (currentBuilding.planetObject.amount + 1)
-        )
-    }
 
     return (
         <>
@@ -128,37 +66,11 @@ function Buildings() {
 
             <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>
                 {buildings.map((building, index) => {
-                    var buildingOreCost = getMultipliedValue(
-                        building.object.ore,
-                        building.object.oreMultipler,
-                        ((building.planetObject ? building.planetObject.amount : 1) + 1)
-                    )
-            
-                    var buildingCrystalCost = getMultipliedValue(
-                        building.object.crystal,
-                        building.object.crystalMultipler,
-                        ((building.planetObject ? building.planetObject.amount : 1) + 1)
-                    )
-            
-                    var buildingGasCost = getMultipliedValue(
-                        building.object.gas,
-                        building.object.crystalMultipler,
-                        ((building.planetObject ? building.planetObject.amount : 1) + 1)
-                    )
-
                     return (
-                        <div key={index} style={{width: '16.6666%'}}>
-                            <div className={'tileItem ' + (isDisabled(building) && 'disabled') + ' ' + (canAffordAll(buildingOreCost, buildingCrystalCost, buildingGasCost) ? 'tileItem-success' : 'tileItem-danger')} title={building.object.name} onClick={() => {
-                                if(isDisabled(building)) return
-                                setCurrentBuilding(building)
-                                openModal()
-                            }}>
-                                <img src={`/assets/img/building/${building.object.name.replace(/ /g,"_")}.jpg`} alt={building.object.name} className='img' />
-                                <span className={'badge ' + (canAffordAll(buildingOreCost, buildingCrystalCost, buildingGasCost) ? 'badge-success' : 'badge-danger')}>
-                                    {(building.planetObject) ? building.planetObject.amount : 1}
-                                </span>
-                            </div>
-                        </div>
+                        <ObjectTile key={index} object={building} onClick={() => {
+                            setCurrentBuilding(building)
+                            openModal()
+                        }} />
                     )
                 })}
             </div>
@@ -168,104 +80,13 @@ function Buildings() {
                     isOpen={modalIsOpen}
                     onRequestClose={closeModal}
                     style={customStyles}
-                    contentLabel='Add Note'
+                    contentLabel='Building'
                 >
-                    <div className="modalContent">
-                        <div className='modalHeading'>
-                            <h1 className='modalHeadingText'>{currentBuilding.object.name}</h1>
-                            <button className='modalClose' onClick={closeModal}>
-                                <FaTimes />
-                            </button>
-                        </div>
-                        <div className='modalBody'>
-                            {currentBuilding.object.description}
-                            <table className='table' style={{marginTop: 30, fontSize: 13}}>
-                                <tbody>
-                                    <tr>
-                                        <th>Level</th>
-                                        <td>
-                                            <span className='badge badge-normal'>             
-                                                {currentBuilding.planetObject.amount}
-                                            </span> -><span className='badge badge-success'>  
-                                                {currentBuilding.planetObject.amount + 1}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th style={{width: '35%'}}>
-                                            Upgrade Duration 
-                                        </th>
-                                        <td style={{width: '65%'}}>
-                                            {duration / 60} minutes
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th style={{width: '35%'}}>
-                                            Production 
-                                        </th>
-                                        <td style={{width: '65%'}}>
-                                            <span className='badge badge-normal'>
-                                                {production.current}
-                                            </span> -><span className='badge badge-success'>
-                                                {production.next}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Resource Cost</th>
-                                        <td>
-                                            {oreCost > 0 && (
-                                                <div>
-                                                    Ore 
-                                                    <span className={'badge ' + ((canAfford(oreCost, currentPlanet.resources.ore.current)) ? 'badge-success' : 'badge-danger')} style={{marginLeft: 5}}>
-                                                        {oreCost}
-                                                    </span>
-                                                </div>
-                                            )}
-                                            {crystalCost > 0 && (
-                                                <div>
-                                                    Crystal 
-                                                    <span className={'badge ' + ((canAfford(crystalCost, currentPlanet.resources.crystal.current)) ? 'badge-success' : 'badge-danger')} style={{marginLeft: 5}}>
-                                                        {crystalCost}
-                                                    </span>
-                                                </div>
-                                            )}
-                                            {gasCost > 0 && (
-                                                <div>
-                                                    Gas 
-                                                    <span className={'badge ' + ((canAfford(gasCost, currentPlanet.resources.gas.current)) ? 'badge-success' : 'badge-danger')} style={{marginLeft: 5}}>
-                                                        {gasCost}
-                                                    </span>
-                                                </div>
-                                            )}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            <button className={'btn ' + ((canAffordAll(oreCost, crystalCost, gasCost)) ? 'btn-success' : 'btn-danger') + ((!canAffordAll(oreCost, crystalCost, gasCost) || isDisabled(currentBuilding)) ? ' disabled' : '')} onClick={() => {
-                                if(isDisabled(currentBuilding)) return
-                                onUpgrade(currentBuilding.planetObject._id, currentBuilding.planetObject.amount + 1)
-                            }}>
-                                Upgrade to level {currentBuilding.planetObject.amount + 1}
-                            </button>
-
-                            {(process.env.REACT_APP_DEBUG_MODE === 'true') && (
-                                <>
-                                    <DebugContainer data={currentBuilding.planetObject._id}>
-                                        <span>planetObject._id:</span>
-                                        {currentBuilding.planetObject._id}
-                                    </DebugContainer>
-
-                                    <DebugContainer data={currentBuilding.planetObject.building}>
-                                        <span>planetObject.building:</span>
-                                        {currentBuilding.planetObject.building}
-                                    </DebugContainer>  
-                                </>
-                            )}   
-                        </div>
-                    </div>
-                </Modal>
+                    <ObjectModal object={currentBuilding} onClose={closeModal} onUpgrade={() => {
+                        onUpgrade(currentBuilding.planetObject._id)
+                        closeModal()
+                    }} />
+                </Modal> 
             )}
         </>
     )

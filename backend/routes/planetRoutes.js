@@ -2,6 +2,10 @@ const express = require('express')
 const router = express.Router({mergeParams: true})
 
 const {
+    getAllPlanets,
+} = require('../controllers/planetController')
+
+const {
     createTechnology,
     createVehicle,
 } = require('../controllers/constructionObjectController')
@@ -23,6 +27,9 @@ router.use('/:planetId/vehicles', planetVehicleRouter)
 //reroute into queue router
 const queueRouter = require('./queueRoutes')
 router.use('/:planetId/queue', queueRouter)
+
+router.route('/')
+    .get(protect, getAllPlanets)
 
 router.route('/technology')
     .post(protect, createTechnology)

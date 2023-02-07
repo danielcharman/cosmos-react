@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Object = require('./models/constructionObjectModel')
+const ConstructionObject = require('./models/constructionObjectModel')
 const PlanetObject = require('./models/planetObjectModel')
 
 const getPlanetResourceLimits = async (planetId) => {
@@ -8,9 +8,9 @@ const getPlanetResourceLimits = async (planetId) => {
     const crystalStorageId = '63e0d55ef3d73c805e4d4aae'
     const gasStorageId = '63e0d55ef3d73c805e4d4aaf'
 
-    const gameOreStorage = await Object.findById(oreStorageId)
-    const gameCrystalStorage = await Object.findById(crystalStorageId)
-    const gameGasStorage = await Object.findById(gasStorageId)
+    const gameOreStorage = await ConstructionObject.findById(oreStorageId)
+    const gameCrystalStorage = await ConstructionObject.findById(crystalStorageId)
+    const gameGasStorage = await ConstructionObject.findById(gasStorageId)
 
     const planetOreStorage = await PlanetObject.findOne({
         planet: new mongoose.mongo.ObjectId(planetId),
@@ -42,26 +42,35 @@ const getPlanetResourceLimits = async (planetId) => {
     }
 }
 
-const getObjectResourceCosts = async (objectId, amount) => {
+const getObjectResourceCosts = async (objectId, amount, useMultiplier = true) => {
 	//get planet and building details to calculate costs
-	const object = await ConstructionObject.findById(planetObject.object)
+	const object = await ConstructionObject.findById(objectId)
 
 	const {
 		duration, 
-		durationMultipler,
+		durationMultiplier,
 		ore, 
-		oreMultipler,
+		oreMultiplier,
 		crystal,
-		crystalMultipler,
+		crystalMultiplier,
 		gas,
-		gasMultipler
+		gasMultiplier
 	} = object
 
-    return {
-        duration: duration * (durationMultipler * amount),
-        ore: ore * (oreMultipler * amount),
-        crystal: crystal * (crystalMultipler * amount),
-        gas: gas * (gasMultipler * amount),
+    if(useMultiplier) {
+        return {
+            duration: duration * (durationMultiplier * amount),
+            ore: ore * (oreMultiplier * amount),
+            crystal: crystal * (crystalMultiplier * amount),
+            gas: gas * (gasMultiplier * amount),
+        }
+    }else{
+        return {
+            duration: duration * amount,
+            ore: ore * amount,
+            crystal: crystal * amount,
+            gas: gas * amount,
+        }  
     }
 }
 

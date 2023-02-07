@@ -29,7 +29,7 @@ const objectQueueSchema = mongoose.Schema({
     },
     amount: {
         type: Number,
-        required: [true, 'Please enter a level'],
+        required: [true, 'Please enter an amount'],
     },
 }, 
 {

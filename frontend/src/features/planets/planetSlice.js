@@ -3,6 +3,7 @@ import planetService from './planetService'
 
 const initialState = {
     planets: [],
+    universe: [],
     queue: [],
     currentPlanet: null,
     isError: false,
@@ -66,6 +67,20 @@ export const planetSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(getAllPlanets.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(getAllPlanets.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.universe = action.payload
+            })
+            .addCase(getAllPlanets.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
+            
             .addCase(getUserPlanets.pending, (state) => {
                 state.isLoading = true
             })

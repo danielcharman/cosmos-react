@@ -24,8 +24,8 @@ export const getPlanetBuildings = createAsyncThunk('planets/getPlanetBuildings',
 export const upgradePlanetBuilding = createAsyncThunk('planets/upgradePlanetBuilding', async(data, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        const {planetId, planetObjectId, amount} = data
-        return await buildingService.upgradePlanetBuilding(planetId, planetObjectId, amount, token)
+        const {planetId, planetObjectId} = data
+        return await buildingService.upgradePlanetBuilding(planetId, planetObjectId, token)
     } catch(error) {
         const message = (error.response && error.response.data && error.response.data.message) || 
         error.message || error.toString()

@@ -159,8 +159,6 @@ const superDeleteUser = asyncHandler(async (req, res) => {
 			planet: new mongoose.mongo.ObjectId(planet._id),
 		})
 
-        console.log('DDD deleteing planetBuildings for ' + planet._id)
-
         return planetObjects
 	})); 
 
@@ -224,7 +222,7 @@ const linkUserPlanet = asyncHandler(async (req, res) => {
         return
     })); 
 
-    const tempVehicles = await Vehicle.find({
+    const tempVehicles = await ConstructionObject.find({
 		type: 'Vehicle'
 	})
 
@@ -238,7 +236,7 @@ const linkUserPlanet = asyncHandler(async (req, res) => {
             planetObject = await PlanetObject.create({
                 planet: req.params.planetId,
                 object: object._id,
-                amount: 1,
+                amount: 0,
             })
         }
 

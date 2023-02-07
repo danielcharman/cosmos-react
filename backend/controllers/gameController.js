@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const Planet = require('../models/planetModel')
 
-const Object = require('../models/constructionObjectModel')
+const ConstructionObject = require('../models/constructionObjectModel')
 const PlanetObject = require('../models/planetObjectModel')
 const ObjectQueue = require('../models/objectQueueModel')
 
@@ -14,67 +14,35 @@ const {
 // @desc    Get buildings queue and process it
 // @access  Private
 const processUpgradeQueue = asyncHandler(async (req, res) => {
-    const buildingsQueue = await ObjectQueue.find({
+	console.log('doing queue')
+
+    const objectQueue = await ObjectQueue.find({
 		completed: {
 			$lt: new Date()
 		}
 	})
 
-	const processedBuildingsQueue = await Promise.all(buildingsQueue.map(async (queueItem) => {
-		//do stuff and then remove queue item
-		const updatedObject = await PlanetObject.findByIdAndUpdate(
-			queueItem.object,
-			{
-				amount: queueItem.amount,
+	const processedQueue = await Promise.all(objectQueue.map(async (queueItem) => {
+		const planetObject = await PlanetObject.findById(queueItem.object)
+		let update
+
+		if(queueItem.type === 'Vehicle') {
+			update = {
+				amount: planetObject.amount + queueItem.amount,
 				active: true,
 			}
-		)
-		await queueItem.remove()
-
-		return updatedObject
-	})); 
-
-	const technologiesQueue = await ObjectQueue.find({
-		completed: {
-			$lt: new Date()
-		}
-	})
-
-	const processedTechnologiesQueue = await Promise.all(technologiesQueue.map(async (queueItem) => {
-		//do stuff and then remove queue item
-		const updatedObject = await PlanetObject.findByIdAndUpdate(
-			queueItem.object,
-			{
-				amount: queueItem.amount,
+		}else{
+			update = {
+				amount: planetObject.amount + 1,
 				active: true,
 			}
-		)
-
-		await queueItem.remove()
-
-		return updatedObject
-	})); 
-
-	const vehiclesQueue = await ObjectQueue.find({
-		completed: {
-			$lt: new Date()
 		}
-	})
 
-	const processedVehiclesQueue = await Promise.all(vehiclesQueue.map(async (queueItem) => {
-		//do stuff and then remove queue item
-		const updatedObject = await PlanetObject.findOneAndUpdate({
-			_id: queueItem.object
-		}, {
-			$inc: {
-				amount: queueItem.amount
-			},
-			active: true,
-		}).exec()
+		await planetObject.updateOne(update);
 
 		await queueItem.remove()
 
-		return updatedObject
+		return update
 	})); 
 })
 
@@ -88,9 +56,9 @@ const processPlanetResources = asyncHandler(async (req, res) => {
 		const crystalMineId = '63e0d55ef3d73c805e4d4aab'
 		const gasMineId = '63e0d55ef3d73c805e4d4aac'
 
-		const gameOreMine = await Object.findById(oreMineId)
-		const gameCrystalMine = await Object.findById(crystalMineId)
-		const gameGasMine = await Object.findById(gasMineId)
+		const gameOreMine = await ConstructionObject.findById(oreMineId)
+		const gameCrystalMine = await ConstructionObject.findById(crystalMineId)
+		const gameGasMine = await ConstructionObject.findById(gasMineId)
 
 		const planetOreMine = await PlanetObject.findOne({
 			planet: new mongoose.mongo.ObjectId(planet._id),
