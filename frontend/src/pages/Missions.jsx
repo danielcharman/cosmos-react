@@ -7,8 +7,6 @@ function Missions() {
 		currentPlanet,
 	} = useSelector(state => state.planets)
 
-    const {user} = useSelector(state => state.auth)
-
     if (!currentPlanet) return <></>
 
     return (

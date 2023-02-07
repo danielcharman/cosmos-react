@@ -12,7 +12,6 @@ import Technologies from './pages/Technologies'
 import Vehicles from './pages/Vehicles'
 import Universe from './pages/Universe'
 import Missions from './pages/Missions'
-import { Link } from 'react-router-dom'
 
 function App() {
 	return (
@@ -81,11 +80,6 @@ function App() {
 								}
 							/>
 						</Routes>
-						{
-						// <Link to='/logout' className='btn btn-danger' style={{position: 'absolute', bottom: 15, right: 15}}>
-						// 	Logout
-						// </Link>
-						}
 					</div>
 				</main>
 			</Router>

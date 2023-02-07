@@ -12,8 +12,6 @@ function Universe() {
         universe
 	} = useSelector(state => state.planets)
 
-    const {user} = useSelector(state => state.auth)
-
     useEffect(() => {
         dispatch(getAllPlanets()) 
     }, [ dispatch ])

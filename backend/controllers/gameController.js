@@ -14,8 +14,6 @@ const {
 // @desc    Get buildings queue and process it
 // @access  Private
 const processUpgradeQueue = asyncHandler(async (req, res) => {
-	console.log('doing queue')
-
     const objectQueue = await ObjectQueue.find({
 		completed: {
 			$lt: new Date()

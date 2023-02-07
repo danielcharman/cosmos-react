@@ -35,16 +35,7 @@ function HeaderMenu() {
     return (
       <div className="headerMenu">
         <FaBars className='headerMenuIcon' onClick={onToggle} />            
-        <ul className={'headerMenuItems ' + ((isOpen) && 'open')}>
-
-            {(process.env.REACT_APP_DEBUG_MODE === 'true') && (
-                <li className='headerMenuItem'>
-                    <a to='/overview' onClick={() => navigator.clipboard.writeText(currentPlanet._id)}>
-                        <span style={{fontSize: 10}} className='headerMenuItemLabel'>currentPlanet._id: {currentPlanet._id}</span>
-                    </a>
-                </li>
-            )}   
-            
+        <ul className={'headerMenuItems ' + ((isOpen) && 'open')}>            
             <li className={'headerMenuItem ' + ((isCurrentRoute('/overview')) && 'active')}>
                 <Link to='/overview' onClick={onToggle}>
                     <FaDesktop className='headerMenuItemIcon' />  
@@ -137,7 +128,15 @@ function HeaderMenu() {
                     <FaSignOutAlt className='headerMenuItemIcon' />  
                     <span className='headerMenuItemLabel'>Logout</span>
                 </Link>
-            </li>                
+            </li>   
+
+            {(process.env.REACT_APP_DEBUG_MODE === 'true') && (
+                <li className='headerMenuItem'>
+                    <a href='/' onClick={() => navigator.clipboard.writeText(currentPlanet._id)}>
+                        <span style={{fontSize: 10}} className='headerMenuItemLabel'>currentPlanet._id: {currentPlanet._id}</span>
+                    </a>
+                </li> 
+            )}              
         </ul>
     </div>
     )

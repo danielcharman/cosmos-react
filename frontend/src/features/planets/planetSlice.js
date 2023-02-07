@@ -57,8 +57,9 @@ export const planetSlice = createSlice({
             state.isError = false
             state.isSuccess = false
             state.message = ''
-            state.planets =  []
-            state.queue =  []
+            state.planets = []
+            state.queue = []
+            state.universe = []
             state.currentPlanet = null
         },
         setCurrentPlanet: (state, action) => {
@@ -75,7 +76,7 @@ export const planetSlice = createSlice({
                 state.isSuccess = true
                 state.universe = action.payload
             })
-            .addCase(getAllPlanets.rejected, (state, action) => {
+            .addCase(getAllPlanets.rejected, (state, action) => { 
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload
