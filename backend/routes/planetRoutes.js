@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router({mergeParams: true})
 
 const {
-    getAllPlanets,
+    getSystemPlanets,
 } = require('../controllers/planetController')
 
 const {
@@ -28,8 +28,8 @@ router.use('/:planetId/vehicles', planetVehicleRouter)
 const queueRouter = require('./queueRoutes')
 router.use('/:planetId/queue', queueRouter)
 
-router.route('/')
-    .get(protect, getAllPlanets)
+router.route('/galaxy/:galaxy/system/:system')
+    .get(protect, getSystemPlanets)
 
 router.route('/technology')
     .post(protect, createTechnology)

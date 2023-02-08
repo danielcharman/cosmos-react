@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { getAllPlanets } from '../features/planets/planetSlice'
 
 import planetImage from '../assets/img/planet.png'
@@ -7,17 +7,26 @@ import planetImage from '../assets/img/planet.png'
 function Universe() {
     const dispatch = useDispatch()
 
+    const [currentSystem, setCurrentSystem] = useState(null)
+
     const {
 		currentPlanet,
-        universe
+        universe,
 	} = useSelector(state => state.planets)
 
     useEffect(() => {
-        dispatch(getAllPlanets()) 
-    }, [ dispatch ])
+        if(currentPlanet) {
+            if(currentSystem === null) setCurrentSystem({
+                galaxy: currentPlanet.galaxy,
+                system: currentPlanet.system
+            })
+            if(currentSystem) {
+                dispatch(getAllPlanets(currentSystem)) 
+            }
+        }
+    }, [ dispatch, currentPlanet ])
 
-
-    if (!currentPlanet) return <></>
+    if (!currentPlanet || !currentSystem) return <></>
 
     return (
         <>
@@ -41,24 +50,56 @@ function Universe() {
                     </tr>
                 </thead>
                 <tbody>
-                    {universe.map((planet, index) => {
-                        return (
-                            <tr key={index}>
-                                <td>
-                                    [{planet.galaxy}:{planet.system}:{planet.position}]
-                                </td>
-                                <td>
-                                    <img src={planetImage} alt='Cosmos' style={{verticalAlign: 'middle', marginRight: 10, width: '100%', maxWidth: 25, height: 'auto'}} />
-                                    {planet.name}
-                                </td>
-                                <td>
-                                    Player Name
-                                </td>
-                                <td>
-                                    Actions
-                                </td>
-                            </tr>
-                        )
+
+                    {[...Array(51)].map((x, index) => {
+                        return universe.map((planet, PlanetIndex) => {
+                            // console.log(planet.position, (index + 1))
+                            if(planet.position === index) {
+                                console.log('found you', (index))
+
+                                return (
+                                    <tr key={index} className='success'>
+                                        <td>
+                                            [{currentSystem.galaxy}:{currentSystem.system}:{index}]
+                                        </td>
+                                        <td>
+                                            <img src={planetImage} alt='Cosmos' style={{verticalAlign: 'middle', marginRight: 10, width: '100%', maxWidth: 25, height: 'auto'}} />
+                                            {planet.name}
+                                        </td>
+                                        <td>
+                                            Player Name
+                                        </td>
+                                        <td>
+                                            Friend Request 
+
+                                            Deployment 
+                                            Transport 
+                                            Espionage 
+                                            Attack
+                                        </td>
+                                    </tr>
+                                )
+                            }else{
+                                return (
+                                    <tr key={index}>
+                                        <td>
+                                            [{currentSystem.galaxy}:{currentSystem.system}:{index}]
+                                        </td>
+                                        <td>
+                                            <img src={planetImage} alt='Cosmos' style={{verticalAlign: 'middle', marginRight: 10, width: '100%', maxWidth: 25, height: 'auto'}} />
+                                            Unknown
+                                        </td>
+                                        <td>
+                                            Unclaimed
+                                        </td>
+                                        <td>
+                                            Colonise
+                                        </td>
+                                    </tr>
+                                )
+                            }
+                        })                       
+
                     })}
                 </tbody>
             </table>

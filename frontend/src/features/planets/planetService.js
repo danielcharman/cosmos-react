@@ -1,15 +1,13 @@
 import axios from 'axios'
 
 //get all planets
-const getAllPlanets = async(token) => {
+const getAllPlanets = async(coords, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     }
-
-    const response = await axios.get('/api/planets', config)
-
+    const response = await axios.get('/api/planets/galaxy/' + coords.galaxy + '/system/' + coords.system, config)
     return response.data
 }
 
@@ -20,9 +18,7 @@ const getUserPlanets = async(userId, token) => {
             Authorization: `Bearer ${token}`,
         },
     }
-
     const response = await axios.get('/api/users/' + userId + '/planets', config)
-
     return response.data
 }
 
@@ -33,9 +29,7 @@ const getPlanetQueue = async(planetId, token) => {
             Authorization: `Bearer ${token}`,
         },
     }
-
     const response = await axios.get('/api/planets/' + planetId + '/queue', config)
-
     return response.data
 }
 

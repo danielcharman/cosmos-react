@@ -12,10 +12,10 @@ const initialState = {
     message: ''
 }
 
-export const getAllPlanets = createAsyncThunk('planets/getAllPlanets', async(_, thunkAPI) => {
+export const getAllPlanets = createAsyncThunk('planets/getAllPlanets', async(coords, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await planetService.getAllPlanets(token)
+        return await planetService.getAllPlanets(coords, token)
     } catch(error) {
         const message = (error.response && error.response.data && error.response.data.message) || 
         error.message || error.toString()
@@ -24,7 +24,7 @@ export const getAllPlanets = createAsyncThunk('planets/getAllPlanets', async(_, 
     }
 })
 
-export const getUserPlanets = createAsyncThunk('planets/getUserPlanets', async(userId, thunkAPI) => {
+export const getUserPlanets = createAsyncThunk('planets/getUserPlanets', async(_, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
         const userId = thunkAPI.getState().auth.user._id
@@ -75,6 +75,8 @@ export const planetSlice = createSlice({
                 state.isLoading = false
                 state.isSuccess = true
                 state.universe = action.payload
+
+                console.log('weeeaaa')
             })
             .addCase(getAllPlanets.rejected, (state, action) => { 
                 state.isLoading = false

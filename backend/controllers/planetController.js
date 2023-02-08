@@ -10,8 +10,11 @@ const {
 // @desc    Get all planets
 // @route   GET /api/planets
 // @access  Private
-const getAllPlanets = asyncHandler(async (req, res) => {
-    const planets = await Planet.find()
+const getSystemPlanets = asyncHandler(async (req, res) => {
+    const planets = await Planet.find({
+        galaxy: req.params.galaxy,
+        system: req.params.system,
+    })
 
 	const newPlanets = await Promise.all(planets.map(async (planet) => {
         const resourceLimits = await getPlanetResourceLimits(planet._id)
@@ -82,6 +85,6 @@ const getUserPlanets = asyncHandler(async (req, res) => {
 })
 
 module.exports = {
-    getAllPlanets,
+    getSystemPlanets,
 	getUserPlanets,
 }
