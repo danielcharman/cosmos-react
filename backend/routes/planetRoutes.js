@@ -3,6 +3,8 @@ const router = express.Router({mergeParams: true})
 
 const {
     getSystemPlanets,
+    colonisePlanet,
+    deletePlanet,
 } = require('../controllers/planetController')
 
 const {
@@ -36,5 +38,11 @@ router.route('/technology')
 
 router.route('/vehicle')
     .post(protect, createVehicle)
+
+router.route('/:planetId')
+    .delete(protect, deletePlanet)
+
+router.route('/colonise')
+    .post(protect, colonisePlanet)
 
 module.exports = router

@@ -79,7 +79,7 @@ function Register() {
                         <input type='password' className='formControl' id='password2' name='password2' value={password2} placeholder='Confirm Password' onChange={onChange} required />
                     </div>
                     <div className='formGroup'>
-                        <button className='btn btn-block'>Register</button> or <Link to='/' className='link'>Login</Link>
+                        <button className='btn btn-info'>Register</button> or <Link to='/' className='link'>Login</Link>
                     </div>
                 </form>
             </section>

@@ -51,7 +51,7 @@
 
 body {
 	font-family: 'Poppins', sans-serif;
-	height: 100vh;
+	/* height: 100vh; */
 	background-color: #111111;
 	color: white;
 	background: url(./assets/img/bg.jpg) no-repeat top center;
@@ -325,25 +325,36 @@ h3 {
 
 .btn {
 	padding: 15px 30px;
-	background-color: var(--light-blue);
+	background-color: var(--light-grey);
+	background-color: #777;
 	color: white;
 	border-radius: 5px;
 	font-weight: 600;
     font-size: inherit;
 	border: none;
 	cursor: pointer;
+	line-height: 1;
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
 }
 
 .btn:hover {
 	filter: brightness(70%);
 }
 
+.btn.btn-small {
+	padding: 5px 10px;
+}
+
 .btn.btn-success {
 	background-color: var(--light-green) !important;
 }
 
+.btn.btn-info {
+	background-color: var(--light-blue) !important;
+}
+
 .btn.btn-danger {
-	background-color: var(--light-red);
+	background-color: var(--light-red) !important;
 }
 
 .btn.disabled {
@@ -381,11 +392,30 @@ h3 {
 }
 
 .table tr.success {
-	border: 3px solid var(--light-green);
+	/* border: 3px solid var(--light-green); */
 } 
 
 .table tr.success th, .table tr.success td  {
-	background-color: var(--light-green);
+	/* border-top: 3px solid var(--light-green) !important; */
+	background-color: rgba(40, 167, 69, 0.5);
+} 
+
+.table tr.info {
+	/* border: 3px solid var(--light-blue); */
+} 
+
+.table tr.info th, .table tr.info td  {
+	/* border-top: 3px solid var(--light-blue) !important; */
+	background-color: rgba(0, 123, 255, 0.5);
+} 
+
+.table tr.danger {
+	/* border: 3px solid var(--light-red) !important; */
+} 
+
+.table tr.danger th, .table tr.danger td  {
+	background-color: rgba(220, 53, 69, 0.5);
+	/* border-top: 3px solid var(--light-red) !important; */
 } 
 
 .table th {
@@ -403,6 +433,13 @@ h3 {
     vertical-align: middle;
     text-align: inherit;
     border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.table .btn {
+	width: 100%;
+	margin-bottom: 5px;
+}
+.table .btn:last-child {
+	margin-bottom: 0;
 }
 
 .badge {

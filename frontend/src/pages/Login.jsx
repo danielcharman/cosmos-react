@@ -66,7 +66,7 @@ function Login() {
                         <input type='password' className='formControl' id='password' name='password' value={password} placeholder='Your Password' onChange={onChange} required />
                     </div>
                     <div className='formGroup'>
-                        <button className='btn'>Login</button> or <Link to='/register' className='link'>Register</Link>
+                        <button className='btn btn-info'>Login</button> or <Link to='/register' className='link'>Register</Link>
                     </div>
                 </form>
             </section>

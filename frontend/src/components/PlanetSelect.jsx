@@ -36,9 +36,9 @@ function PlanetSelect() {
 				<FaAngleDown className='headerPlanetsSelector' /> 
 			</div>
 			<ul className={'headerPlanetsOptions ' + ((isOpen) && 'open')}>
-				{planets.map((planet) => (
+				{planets.map((planet, index) => (
 					<li 
-					key={planet._id} 
+					key={index} 
 					className={'headerPlanetsOptionsItem ' +  
 						((planet._id === currentPlanet._id) && 'active')} 
 					onClick={() => {

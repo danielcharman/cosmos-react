@@ -48,6 +48,28 @@ export const getPlanetQueue = createAsyncThunk('planets/getPlanetQueue', async(p
     }
 })
 
+export const colonisePlanet = createAsyncThunk('planets/colonisePlanet', async(data, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await planetService.colonisePlanet(data, token)
+    } catch(error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+export const abandonPlanet = createAsyncThunk('planets/abandonPlanet', async(planetId, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await planetService.abandonPlanet(planetId, token)
+    } catch(error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 export const planetSlice = createSlice({
     name: 'planet',
     initialState: initialState,
@@ -75,8 +97,6 @@ export const planetSlice = createSlice({
                 state.isLoading = false
                 state.isSuccess = true
                 state.universe = action.payload
-
-                console.log('weeeaaa')
             })
             .addCase(getAllPlanets.rejected, (state, action) => { 
                 state.isLoading = false

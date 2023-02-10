@@ -1,10 +1,16 @@
 const asyncHandler = require('express-async-handler')
 const mongoose = require('mongoose');
 
+const User = require('../models/userModel')
+
 const Planet = require('../models/planetModel')
+const PlanetObject = require('../models/planetObjectModel')
+
+const Mission = require('../models/missionModel')
 
 const {
-    getPlanetResourceLimits
+    getPlanetResourceLimits,
+    registerPlanet,
 } = require('../game')
 
 // @desc    Get all planets
@@ -84,7 +90,82 @@ const getUserPlanets = asyncHandler(async (req, res) => {
     res.status(200).json(newPlanets)
 })
 
+
+const colonisePlanet = asyncHandler(async (req, res) => {
+    const {source} = req.body
+    const {galaxy, system, position} = JSON.parse(req.body.vector)
+
+    const planet = await Planet.findOne({ 
+        galaxy: galaxy, 
+        system: system, 
+        position: position, 
+    })
+
+    if (planet) {
+        res.status(400)
+        throw new Error('Cannot colonise occupied planet')
+    }
+    const user = await User.findById(req.user.id)
+ 
+    const newPlanet = await registerPlanet(user, '', {
+        galaxy: galaxy,
+        system: system,
+        position: position
+    })
+
+
+//----
+
+
+    //check if upgrade is already queued
+	const missionQueue = await Mission.findOne({
+		user: req.user.id,
+	}).sort({
+		completed: 'desc'
+	})
+
+	let completedDate = new Date();
+	if (missionQueue) {
+		completedDate = new Date(missionQueue.completed)
+	}
+	completedDate.setSeconds(completedDate.getSeconds() + 600);
+
+    console.log(newPlanet)
+
+    const queuedMission = await Mission.create({
+		user: req.user.id, 
+		source: source,
+		destination: newPlanet._id,
+		action: 'Colonise',
+		completed: completedDate, 
+		distance: 10,
+	})
+
+    res.status(200).json([newPlanet, queuedMission])
+})
+
+const deletePlanet = asyncHandler(async (req, res) => {
+    const planet = await Planet.findById(req.params.planetId) 
+
+    if (!planet) {
+        res.status(400)
+        throw new Error('Planet doesnt exist')
+    }
+
+    await PlanetObject.deleteMany({
+        planet: new mongoose.mongo.ObjectId(req.params.planetId),
+    })
+
+    await Planet.deleteOne({
+        _id: new mongoose.mongo.ObjectId(req.params.planetId),
+    })
+
+    res.status(200).json()
+})
+
 module.exports = {
     getSystemPlanets,
 	getUserPlanets,
+    colonisePlanet,
+    deletePlanet,
 }

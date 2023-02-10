@@ -4,6 +4,7 @@ import planetReducer from '../features/planets/planetSlice';
 import buildingReducer from '../features/buildings/buildingSlice';
 import technologyReducer from '../features/technologies/technologySlice';
 import vehicleReducer from '../features/vehicles/vehicleSlice';
+import missionReducer from '../features/missions/missionSlice';
 
 export const store = configureStore({
 	reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
 		buildings: buildingReducer,
 		technologies: technologyReducer,
 		vehicles: vehicleReducer,
+		missions: missionReducer,
 	},
 });

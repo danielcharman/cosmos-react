@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+const Planet = require('./models/planetModel')
 const ConstructionObject = require('./models/constructionObjectModel')
 const PlanetObject = require('./models/planetObjectModel')
 
@@ -74,7 +75,85 @@ const getObjectResourceCosts = async (objectId, amount, useMultiplier = true) =>
     }
 }
 
+const registerPlanet = async (user, name, vector) => {
+	const planet = await Planet.create({
+        galaxy: vector.galaxy,
+        system: vector.system,
+        position: vector.position,
+        name: (name) ? name : `${user.name}'s Planet`,
+        temperature: (Math.random() * (50 - -10) + -10).toFixed(0),
+        size: (Math.random() * (50000 - 10000) + 10000).toFixed(0),
+        user: user._id,
+    })
+
+    const tempBuildings = await ConstructionObject.find({
+        type: 'Building'
+    })
+
+    await Promise.all(tempBuildings.map(async (object) => {
+        let planetObject = await PlanetObject.findOne({
+            planet: planet._id,
+            object: object._id
+        })
+
+        if(!planetObject) {
+            planetObject = await PlanetObject.create({
+                planet: planet._id,
+                object: object._id,
+                amount: 1,
+            })
+        }
+
+        return
+    }));  
+
+    const tempTechnologies = await ConstructionObject.find({
+        type: 'Technology'
+    })
+
+    await Promise.all(tempTechnologies.map(async (object) => {
+        let planetObject = await PlanetObject.findOne({
+            planet: planet._id,
+            object: object._id
+        })
+
+        if(!planetObject) {
+            planetObject = await PlanetObject.create({
+                planet: planet._id,
+                object: object._id,
+                amount: 1,
+            })
+        }
+
+        return
+    })); 
+
+    const tempVehicles = await ConstructionObject.find({
+        type: 'Vehicle'
+    })
+
+    await Promise.all(tempVehicles.map(async (object) => {
+        let planetObject = await PlanetObject.findOne({
+            planet: planet._id,
+            object: object._id
+        })
+
+        if(!planetObject) {
+            planetObject = await PlanetObject.create({
+                planet: planet._id,
+                object: object._id,
+                amount: 1,
+            })
+        }
+
+        return
+    })); 
+
+    return planet
+}
+
 module.exports = {
     getPlanetResourceLimits,
-    getObjectResourceCosts
+    getObjectResourceCosts,
+    registerPlanet,
 }

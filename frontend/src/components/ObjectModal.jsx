@@ -17,7 +17,7 @@ function ObjectModal({object, onClose, onUpgrade}) {
     }
 
     const canAfford = (cost, resource) => {
-        return (cost < resource) ? true : false
+        return (cost <= resource) ? true : false
     }
 
     const canAffordAll = (oreCost, crystalCost, gasCost) => {

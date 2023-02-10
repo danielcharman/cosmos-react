@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useState } from 'react'
 import { getPlanetQueue } from '../features/planets/planetSlice'
 import Countdown from './Countdown'
+import DebugContainer from '../components/DebugContainer'
 
 function HeaderMenu() {
     const [isOpen, setIsOpen] = useState(false) 
@@ -15,6 +16,8 @@ function HeaderMenu() {
 		currentPlanet, 
 		queue,
 	} = useSelector(state => state.planets)
+
+    const {user} = useSelector(state => state.auth)
 
     const onToggle = () => {
         setIsOpen(!isOpen)
@@ -131,12 +134,25 @@ function HeaderMenu() {
             </li>   
 
             {(process.env.REACT_APP_DEBUG_MODE === 'true') && (
-                <li className='headerMenuItem'>
-                    <a href='/' onClick={() => navigator.clipboard.writeText(currentPlanet._id)}>
-                        <span style={{fontSize: 10}} className='headerMenuItemLabel'>currentPlanet._id: {currentPlanet._id}</span>
-                    </a>
-                </li> 
-            )}              
+                <>
+                    <li className='headerMenuItem' style={{padding: '0 10px'}}>                       
+                        <DebugContainer data={currentPlanet._id}>
+                            <span>currentPlanet._id:</span>
+                            {currentPlanet._id}
+                        </DebugContainer> 
+                        
+                        <DebugContainer data={user._id}>
+                            <span>user._id:</span>
+                            {user._id}
+                        </DebugContainer> 
+
+                        <DebugContainer data={currentPlanet._id}>
+                            <span>currentPlanet._id:</span>
+                            {currentPlanet._id}
+                        </DebugContainer> 
+                    </li> 
+                </>
+            )}            
         </ul>
     </div>
     )

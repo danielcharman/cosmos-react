@@ -12,5 +12,6 @@ const {protect} = require('../middleware/authMiddleware')
 
 router.route('/')
     .get(protect, getUserPlanets)
+    
 
 module.exports = router

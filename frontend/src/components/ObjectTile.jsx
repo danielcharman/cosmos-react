@@ -7,7 +7,7 @@ function ObjectTile({object, onClick}) {
 	} = useSelector(state => state.planets)
 
     const canAfford = (cost, resource) => {
-        return (cost < resource) ? true : false
+        return (cost <= resource) ? true : false
     }
 
     const canAffordAll = (oreCost, crystalCost, gasCost) => {

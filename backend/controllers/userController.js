@@ -10,6 +10,10 @@ const Planet = require('../models/planetModel')
 const ConstructionObject = require('../models/constructionObjectModel')
 const PlanetObject = require('../models/planetObjectModel')
 
+const {
+    registerPlanet,
+} = require('../game')
+
 // @desc    Register a new user
 // @route   /api/users
 // @access  Public
@@ -41,76 +45,11 @@ const registerUser = asyncHandler(async (req, res) => {
     })
 
     if(user) {
-        const planet = await Planet.create({
-            position: (Math.random() * (1000 - 100) + 100).toFixed(0),
-            name: `${user.name}'s Planet`,
-            temperature: (Math.random() * (50 - -10) + -10).toFixed(0),
-            size: (Math.random() * (50000 - 10000) + 10000).toFixed(0),
-            user: user._id,
+        const planet = registerPlanet(user, '', {
+            galaxy: 1,
+            system: 1,
+            position: (Math.random() * (15 - 1) + 1).toFixed(0)
         })
-
-        const tempBuildings = await ConstructionObject.find({
-            type: 'Building'
-        })
-
-        const buildings = await Promise.all(tempBuildings.map(async (object) => {
-            let planetObject = await PlanetObject.findOne({
-                planet: planet._id,
-                object: object._id
-            })
-    
-            if(!planetObject) {
-                planetObject = await PlanetObject.create({
-                    planet: planet._id,
-                    object: object._id,
-                    amount: 1,
-                })
-            }
-    
-            return
-        }));  
-
-        const tempTechnologies = await ConstructionObject.find({
-            type: 'Technology'
-        })
-
-        const technologies = await Promise.all(tempTechnologies.map(async (object) => {
-            let planetObject = await PlanetObject.findOne({
-                planet: planet._id,
-                object: object._id
-            })
-    
-            if(!planetObject) {
-                planetObject = await PlanetObject.create({
-                    planet: planet._id,
-                    object: object._id,
-                    amount: 1,
-                })
-            }
-    
-            return
-        })); 
-
-        const tempVehicles = await ConstructionObject.find({
-            type: 'Vehicle'
-        })
-    
-        const vehicles = await Promise.all(tempVehicles.map(async (object) => {
-            let planetObject = await PlanetObject.findOne({
-                planet: planet._id,
-                object: object._id
-            })
-    
-            if(!planetObject) {
-                planetObject = await PlanetObject.create({
-                    planet: planet._id,
-                    object: object._id,
-                    amount: 1,
-                })
-            }
-    
-            return
-        })); 
 
         res.status(201).json({
             _id: user._id,

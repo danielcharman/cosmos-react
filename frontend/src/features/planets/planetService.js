@@ -33,10 +33,34 @@ const getPlanetQueue = async(planetId, token) => {
     return response.data
 }
 
+//get planets development queue
+const colonisePlanet = async(vector, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+    const response = await axios.post('/api/planets/colonise', vector, config)
+    return response.data
+}
+
+//get planets development queue
+const abandonPlanet = async(planetId, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+    const response = await axios.delete(`/api/planets/${planetId}`, config)
+    return response.data
+}
+
 const planetService = {
     getAllPlanets,
     getUserPlanets,
     getPlanetQueue,
+    colonisePlanet,
+    abandonPlanet,
 }
 
 export default planetService

@@ -1,5 +1,4 @@
 import { useSelector } from 'react-redux'
-import DebugContainer from '../components/DebugContainer'
 
 import planetImage from '../assets/img/planet.png'
 
@@ -7,8 +6,6 @@ function Overview() {
     const {
 		currentPlanet,
 	} = useSelector(state => state.planets)
-
-    const {user} = useSelector(state => state.auth)
 
     if (!currentPlanet) return <></>
 
@@ -41,20 +38,6 @@ function Overview() {
                     </table>
                 </div>
             </div>
-
-            {(process.env.REACT_APP_DEBUG_MODE === 'true') && (
-                <>
-                    <DebugContainer data={user._id}>
-                        <span>user._id:</span>
-                        {user._id}
-                    </DebugContainer> 
-
-                    <DebugContainer data={currentPlanet._id}>
-                        <span>currentPlanet._id:</span>
-                        {currentPlanet._id}
-                    </DebugContainer> 
-                </>
-            )}   
         </>
         
     )

@@ -4,9 +4,13 @@ const {registerUser, loginUser, superDeleteUser, linkUserPlanet} = require('../c
 
 const {protect} = require('../middleware/authMiddleware')
 
-//reroute into note router
+//reroute into user planet router
 const userPlanetRouter = require('./userPlanetRoutes')
 router.use('/:userId/planets', userPlanetRouter)
+
+//reroute into user mission router
+const userMissionRouter = require('./userMissionRoutes')
+router.use('/:userId/missions', userMissionRouter)
 
 router.post('/', registerUser)
 router.post('/login', loginUser)
