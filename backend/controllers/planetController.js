@@ -113,9 +113,7 @@ const colonisePlanet = asyncHandler(async (req, res) => {
         position: position
     })
 
-
-//----
-
+//-----------------------
 
     //check if upgrade is already queued
 	const missionQueue = await Mission.findOne({
@@ -129,8 +127,6 @@ const colonisePlanet = asyncHandler(async (req, res) => {
 		completedDate = new Date(missionQueue.completed)
 	}
 	completedDate.setSeconds(completedDate.getSeconds() + 600);
-
-    console.log(newPlanet)
 
     const queuedMission = await Mission.create({
 		user: req.user.id, 
